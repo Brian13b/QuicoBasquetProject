@@ -1,0 +1,189 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #dcdcdca8;
+}
+
+/* Estilos para el contenedor principal */
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos para la sección de reservas */
+.reserva {
+  padding: 80px 0;
+  background-color: #f8f9fa;
+  
+}
+
+.reserva h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2rem;
+  color: #333;
+}
+
+.reserva p {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Estilos para las tarjetas */
+.card {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  margin-bottom: 20px;
+  color: #222;
+  font-size: 1.5rem;
+}
+
+.card ul {
+  list-style-type: none;
+}
+
+.card ul li {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.card ul li strong {
+  color: #333;
+}
+
+/* Estilos para el layout de about */
+.about-layout {
+  display: flex;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.info-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 30%;
+}
+
+.card.mapa {
+  width: 70%;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* Estilos para los botones sociales */
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-social.whatsapp {
+  background-color: #25D366;
+}
+
+.btn-social.instagram {
+  background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
+}
+
+.btn-social.gmail {
+  background-color: #D44638;
+}
+
+.btn-social:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-social i {
+  font-size: 1.2rem;
+}
+
+/* Estilos para la galería */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1/1;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.1);
+}
+
+/* Estilos responsivos */
+@media (max-width: 1024px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .about-layout {
+    flex-direction: column;
+  }
+
+  .info-cards {
+    width: 100%;
+  }
+
+  .card.mapa {
+    width: 100%;
+    min-height: 300px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .reserva {
+    padding: 50px 0;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}

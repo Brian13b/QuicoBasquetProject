@@ -1,0 +1,19 @@
+# CONFIGURACIÓN DE EMAIL PARA QUICO BÁSQUET
+# 
+# Para configurar el envío de emails con Gmail:
+# 
+# 1. Ve a tu cuenta de Google: https://myaccount.google.com/
+# 2. Ve a "Seguridad" -> "Verificación en 2 pasos" (debe estar activada)
+# 3. Ve a "Contraseñas de aplicaciones"
+# 4. Selecciona "Correo" y "Otro (nombre personalizado)"
+# 5. Escribe "Quico Basquet" y genera la contraseña
+# 6. Copia esa contraseña de 16 caracteres y úsala aquí:
+
+# Agrega estas variables a tu archivo .env o configúralas en tu sistema:
+GMAIL_APP_PASSWORD=tu_contraseña_de_aplicacion_aqui
+
+# NOTA IMPORTANTE:
+# - NUNCA uses tu contraseña normal de Gmail
+# - SIEMPRE usa una contraseña de aplicación
+# - No compartas esta contraseña en código público
+# - Mantén estas credenciales seguras

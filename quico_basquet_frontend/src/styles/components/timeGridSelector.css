@@ -1,0 +1,483 @@
+.time-grid-selector {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin: 20px 0;
+  border: 1px solid #e9ecef;
+}
+
+/* Header */
+.selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  background: #707070;
+  color: white;
+}
+
+.court-info-header {
+  flex: 1;
+}
+
+.court-title {
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+}
+
+.court-subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+  color: white;
+}
+
+.sport-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.sport-icon {
+  font-size: 1.4rem;
+}
+
+.sport-select {
+  background: transparent;
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  outline: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.sport-select:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sport-select option {
+  background: rgb(142, 142, 142);
+  color: white;
+  font-weight: 600;
+}
+
+/* Week Navigation */
+.week-navigation {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.nav-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: white;
+  color: #667eea;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-arrow:hover:not(.disabled) {
+  background: #667eea;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+.nav-arrow.disabled {
+  background: #f8f9fa;
+  color: #dee2e6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.days-container {
+  display: flex;
+  gap: 1px;
+  flex: 1;
+  justify-content: center;
+}
+
+.day-button {
+  flex: 0 0 auto;
+  min-width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 8px;
+  border: none;
+  background: white;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  min-height: 70px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.day-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.day-button.today {
+  background: #667eea;
+  color: white;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+.day-button.selected {
+  background: #28a745;
+  color: white;
+  box-shadow: 0 4px 16px rgba(40, 167, 69, 0.3);
+}
+
+.day-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.day-number {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+/* Selected Date Display */
+.selected-date-display {
+  padding: 20px 24px;
+  background: white;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.date-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+}
+
+.calendar-icon {
+  font-size: 1.2rem;
+}
+
+.current-date {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+/* Time Grid Container */
+.time-grid-container {
+  padding: 24px;
+  background: url('../../assets/cancha-1.jpg') center / cover no-repeat;
+}
+
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.time-slot {
+  height: 70px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: white;
+  overflow: hidden;
+}
+
+.time-slot:hover:not(.booked) {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+}
+
+.time-slot.selected {
+  background: #667eea;
+  border-color: #667eea;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
+}
+
+.time-slot.booked {
+  background: #f8f9fa;
+  border-color: #dee2e6;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.time-slot-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.time-hour {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.booked-text {
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.selected-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+}
+
+/* Footer */
+.selector-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+.info-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.info-icon {
+  color: #667eea;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.legend {
+  display: flex;
+  gap: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid #e9ecef;
+}
+
+.legend-color.available {
+  background: white;
+}
+
+.legend-color.booked {
+  background: #f8f9fa;
+}
+
+.legend-color.selected {
+  background: #667eea;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .time-grid-selector {
+    margin: 10px 0;
+    border-radius: 12px;
+  }
+
+  .selector-header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .court-info-header {
+    text-align: center;
+  }
+
+  .sport-selector {
+    align-self: center;
+  }
+
+  .week-navigation {
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .nav-arrow {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+  }
+
+  .days-container {
+    gap: 8px;
+  }
+
+  .day-button {
+    min-width: 70px;
+    min-height: 60px;
+  }
+
+  .selected-date-display {
+    padding: 16px;
+  }
+
+  .date-info {
+    padding: 12px 16px;
+  }
+
+  .current-date {
+    font-size: 1rem;
+  }
+
+  .time-grid-container {
+    padding: 16px;
+  }
+
+  .time-slots-grid {
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 8px;
+  }
+
+  .time-slot {
+    height: 65px;
+  }
+
+  .selector-footer {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .legend {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .time-slots-grid {
+    grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+    gap: 6px;
+  }
+
+  .time-slot {
+    height: 55px;
+  }
+
+  .time-hour {
+    font-size: 0.8rem;
+  }
+
+  .nav-arrow {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+
+  .day-button {
+    min-width: 60px;
+    min-height: 50px;
+  }
+
+  .day-name {
+    font-size: 0.7rem;
+  }
+
+  .day-number {
+    font-size: 1.1rem;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.time-slot {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.time-slot:nth-child(odd) {
+  animation-delay: 0.1s;
+}
+
+.time-slot:nth-child(even) {
+  animation-delay: 0.2s;
+}
+
+/* Scrollbar personalizado para móvil */
+.time-grid-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.time-grid-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.time-grid-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.time-grid-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+} 

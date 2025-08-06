@@ -1,0 +1,23 @@
+# Node
+node_modules/
+dist/
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Environment variables
+.env
+quico_basquet_backend/venv
+
+
+# Firebase 
+quico_basquet_backend/*.json
+
+# IDEs / Sistema
+.vscode/
+.DS_Store
+

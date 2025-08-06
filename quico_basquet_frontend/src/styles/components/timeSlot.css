@@ -1,0 +1,130 @@
+.time-slots-container {
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.time-slots-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.time-slots-title {
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.time-slots-date {
+  font-size: 1.2rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 1rem;
+}
+
+.time-slot {
+  padding: 12px 8px;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  position: relative;
+  background-color: #f8f9fa;
+}
+
+.time-slot.available {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border-color: #c8e6c9;
+}
+
+.time-slot.available:hover {
+  background-color: #c8e6c9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.time-slot.booked {
+  background-color: #ffebee;
+  color: #c62828;
+  cursor: not-allowed;
+  border-color: #ef9a9a;
+}
+
+.time-slot.selected {
+  background-color: #bbdefb;
+  color: #0d47a1;
+  border-color: #64b5f6;
+  font-weight: 600;
+}
+
+.time-slot-label {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.time-slot-time {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.time-slot-status {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.time-slot.available .time-slot-status {
+  background-color: #a5d6a7;
+  color: #1b5e20;
+}
+
+.time-slot.booked .time-slot-status {
+  background-color: #ef9a9a;
+  color: #b71c1c;
+}
+
+.time-slots-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .time-slots-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .time-slots-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .time-slots-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .time-slot {
+    padding: 10px 6px;
+  }
+}

@@ -1,0 +1,269 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+  padding: 20px;
+}
+
+.booking-modal {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.booking-modal h3 {
+  color: #2d2d42;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #25D366;
+  padding-bottom: 0.5rem;
+}
+
+.booking-modal p {
+  margin-bottom: 1rem;
+  color: #555;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+  background-color: #f9f9f9;
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: #25D366;
+}
+
+.resumen-pago {
+  background-color: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+.resumen-pago h4 {
+  color: #2d2d42;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.resumen-pago p {
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.resumen-pago .total {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #25D366;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px dashed #ccc;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.modal-actions button:first-child {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 2px solid #e0e0e0;
+}
+
+.modal-actions button:first-child:hover {
+  background-color: #e0e0e0;
+}
+
+.modal-actions button:last-child {
+  background-color: #25D366;
+  color: white;
+  border: 2px solid #25D366;
+}
+
+.modal-actions button:last-child:hover {
+  background-color: #1fa955;
+  border-color: #1fa955;
+}
+
+.modal-actions button:disabled {
+  background-color: #cccccc;
+  border-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Animaciones */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilos para transferencia */
+.transferencia-info {
+  background-color: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
+.transferencia-info h4 {
+  color: #2d2d42;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.transferencia-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.dato-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background-color: white;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.dato-item strong {
+  color: #495057;
+  font-weight: 600;
+  min-width: 80px;
+}
+
+.dato-valor {
+  color: #2d2d42;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  margin: 0 0.5rem;
+  flex: 1;
+  text-align: center;
+}
+
+.btn-copiar {
+  background-color: #25D366;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-copiar:hover {
+  background-color: #1fa955;
+}
+
+.transferencia-nota {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+}
+
+.transferencia-nota p {
+  margin: 0;
+  color: #856404;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .booking-modal {
+    padding: 1.5rem;
+    max-height: 85vh;
+  }
+  
+  .modal-overlay {
+    padding: 10px;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .modal-actions button {
+    width: 100%;
+  }
+  
+  .dato-item {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  
+  .dato-item strong {
+    min-width: auto;
+  }
+  
+  .btn-copiar {
+    width: 40px;
+    height: 40px;
+    margin-top: 0.5rem;
+  }
+}

@@ -1,0 +1,67 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+}
+
+.auth-container {
+  display: flex;
+  max-width: 1000px;
+  width: 90%;
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.auth-hero {
+  flex: 1;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.5)),
+    url('/src/assets/hero.jpg') center/cover no-repeat;
+  color: white;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.auth-hero p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.auth-form-container {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-form-container h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+  }
+  
+  .auth-hero {
+    padding: 30px 20px;
+    text-align: center;
+  }
+  
+  .auth-form-container {
+    padding: 30px 20px;
+  }
+}
