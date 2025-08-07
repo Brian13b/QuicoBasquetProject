@@ -86,13 +86,10 @@ function AdminPricing({ token }) {
 
   const handleSave = async () => {
     try {
-      console.log('💰 Guardando precios para cancha:', selectedCancha);
-      console.log('📋 Datos del formulario:', preciosForm);
-      
       await canchaService.updatePrecios(selectedCancha, preciosForm, token);
       showAlert('success', 'Éxito', 'Precios actualizados correctamente');
       setEditMode(false);
-      fetchCanchas(); // Recargar datos
+      fetchCanchas(); 
     } catch (error) {
       console.error('Error al actualizar precios:', error);
       showAlert('error', 'Error', 'No se pudieron actualizar los precios');
@@ -128,7 +125,7 @@ function AdminPricing({ token }) {
     <div className="admin-pricing">
       <div className="pricing-header">
         <h2>Gestión de Precios y Descuentos</h2>
-        <p>Configura los precios por deporte y descuentos para cada cancha</p>
+        <p>Configura los precios por deporte y descuentos</p>
       </div>
 
       <div className="pricing-controls">
@@ -261,7 +258,7 @@ function AdminPricing({ token }) {
 
           {/* Vista Previa de Precios */}
           <div className="pricing-preview">
-            <h3>👀 Vista Previa de Precios Finales</h3>
+            <h3>Vista Previa de Precios Finales</h3>
             <div className="preview-grid">
               <div className="preview-card">
                 <h4>🏀 Básquet</h4>

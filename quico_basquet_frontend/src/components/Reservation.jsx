@@ -101,9 +101,6 @@ function Reservation() {
     const day = String(selectedDate.getDate()).padStart(2, '0');
     const fechaLocal = `${year}-${month}-${day}`;
 
-    console.log('📅 Fecha seleccionada:', selectedDate.toDateString());
-    console.log('📅 Fecha formateada:', fechaLocal);
-
     const reservaData = {
       cancha_id: selectedCancha,
       fecha: fechaLocal,
@@ -114,7 +111,6 @@ function Reservation() {
     };
 
     try {
-      console.log('📤 Enviando datos de reserva:', reservaData);
       await createReserva(reservaData);
       showAlert('success', 'Reserva Creada', '¡Tu reserva ha sido creada exitosamente!');
       setShowBookingModal(false);

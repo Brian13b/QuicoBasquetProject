@@ -9,7 +9,6 @@ export const checkFirebaseConfig = () => {
     appId: import.meta.env.VITE_FIREBASE_APP_ID
   };
 
-  console.log('Configuración de Firebase:', config);
 
   const missingKeys = Object.keys(config).filter(key => !config[key]);
   

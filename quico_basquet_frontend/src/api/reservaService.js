@@ -66,7 +66,6 @@ export const reservaService = {
         headers: { Authorization: `Bearer ${token}` },
         params
       });
-      console.log('📊 Reservas y suscripciones obtenidas:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error obteniendo reservas:', error.response?.data || error.message);

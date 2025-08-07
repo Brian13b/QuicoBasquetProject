@@ -5,9 +5,6 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const suscripcionService = {
   crearSuscripcion: async (suscripcionData) => {
     try {
-      console.log('📡 Enviando petición de creación de suscripción...');
-      console.log('📋 Datos enviados:', suscripcionData);
-      
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('No hay token de autenticación');
@@ -19,26 +16,15 @@ export const suscripcionService = {
           'Content-Type': 'application/json'
         }
       });
-      
-      console.log('✅ Respuesta del servidor:', response.data);
       return response.data;
     } catch (error) {
       console.error('❌ Error en crearSuscripcion:', error);
       
       if (error.response) {
-        // El servidor respondió con un código de error
-        console.error('📊 Status:', error.response.status);
-        console.error('📋 Headers:', error.response.headers);
-        console.error('📄 Data:', error.response.data);
-        
         throw error.response.data || { message: 'Error al crear suscripción' };
       } else if (error.request) {
-        // La petición fue hecha pero no se recibió respuesta
-        console.error('🌐 No se recibió respuesta del servidor');
         throw { message: 'No se pudo conectar con el servidor' };
       } else {
-        // Algo más causó el error
-        console.error('💥 Error en la petición:', error.message);
         throw { message: error.message || 'Error al crear suscripción' };
       }
     }
@@ -58,11 +44,9 @@ export const suscripcionService = {
 
   obtenerSuscripcionesPorFecha: async (fecha, canchaId) => {
     try {
-      console.log('📅 Obteniendo suscripciones para fecha:', fecha, 'cancha:', canchaId);
       const response = await axios.get(`${API_URL}/suscripciones/fecha/${fecha}`, {
         params: { cancha_id: canchaId }
       });
-      console.log('📅 Suscripciones encontradas:', response.data);
       return response.data;
     } catch (error) {
       console.error('❌ Error al obtener suscripciones por fecha:', error);
@@ -168,9 +152,6 @@ export const suscripcionService = {
   // Calcular precio final con descuentos desde el backend
   calcularPrecioFinal: async (canchaId, deporte, duracionHoras, esSuscripcion = false) => {
     try {
-      console.log('💰 Calculando precio final...');
-      console.log('📋 Parámetros:', { canchaId, deporte, duracionHoras, esSuscripcion });
-      
       const response = await axios.get(`${API_URL}/canchas/${canchaId}/calcular-precio`, {
         params: {
           deporte,
@@ -179,7 +160,7 @@ export const suscripcionService = {
         }
       });
       
-      console.log('✅ Precio calculado:', response.data);
+      console.log('✅ Precio calculado');
       return response.data.precio_final;
     } catch (error) {
       console.error('❌ Error al calcular precio final:', error);

@@ -114,19 +114,16 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
   min-width: 120px;
 }
 
 .alert-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
   background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
 }
 
 .alert-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
 }
 
 /* Animaciones */
@@ -203,40 +200,32 @@
 
 .alert-modal.error .alert-btn {
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
 }
 
 .alert-modal.error .alert-btn:hover {
-  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
   background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
 }
 
 .alert-modal.warning .alert-btn {
   background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-  box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
 }
 
 .alert-modal.warning .alert-btn:hover {
-  box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
   background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
 }
 
 .alert-modal.success .alert-btn {
   background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
 }
 
 .alert-modal.success .alert-btn:hover {
-  box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
   background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
 }
 
 .alert-modal.info .alert-btn {
   background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
 }
 
 .alert-modal.info .alert-btn:hover {
-  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
   background: linear-gradient(135deg, #2980b9 0%, #1f618d 100%);
 } 

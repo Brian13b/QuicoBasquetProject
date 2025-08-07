@@ -23,14 +23,11 @@ export const canchaService = {
 
   updatePrecios: async (canchaId, preciosData, token) => {
     try {
-      console.log('💰 Actualizando precios de cancha:', canchaId);
-      console.log('📋 Datos a enviar:', preciosData);
-      
       const response = await axios.put(`${API_URL}/canchas/${canchaId}/precios`, preciosData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      console.log('✅ Precios actualizados exitosamente:', response.data);
+      console.log('✅ Precios actualizados exitosamente');
       return response.data;
     } catch (error) {
       console.error('❌ Error al actualizar precios:', error.response?.data || error.message);

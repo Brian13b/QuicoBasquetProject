@@ -8,7 +8,7 @@
   text-align: center;
   margin-bottom: 30px;
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #757575 0%, #909090 100%);
   color: white;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -61,7 +61,7 @@
 
 .pricing-controls select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #757575;
 }
 
 .pricing-actions {
@@ -81,36 +81,30 @@
 }
 
 .btn-edit {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #757575 0%, #909090 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
 .btn-edit:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
 }
 
 .btn-save {
   background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
 }
 
 .btn-save:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(39, 174, 96, 0.6);
 }
 
 .btn-cancel {
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
   color: white;
-  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
 }
 
 .btn-cancel:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6);
 }
 
 .btn-edit:disabled, .btn-save:disabled, .btn-cancel:disabled {
@@ -134,7 +128,7 @@
   border-radius: 10px;
 }
 
-.cancha-info h3 {
+.cancha-se h3 {
   margin: 0 0 10px 0;
   color: #333;
   font-size: 1.5rem;
@@ -198,7 +192,7 @@
 
 .price-input span, .discount-input span {
   font-weight: 600;
-  color: #667eea;
+  color: #757575;
 }
 
 .price-input input, .discount-input input {
@@ -213,7 +207,7 @@
 
 .price-input input:focus, .discount-input input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #757575;
 }
 
 .price-input input:disabled, .discount-input input:disabled {
@@ -223,7 +217,7 @@
 }
 
 .pricing-preview {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #757575 0%, #909090 100%);
   color: white;
   border-radius: 15px;
   padding: 30px;

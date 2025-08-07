@@ -6,7 +6,6 @@
   backdrop-filter: blur(10px);
   padding: 1rem;
   border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .tab-btn {
@@ -31,7 +30,6 @@
   background: #667eea;
   border-color: transparent;
   color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
 /* Formulario de notificación */
@@ -40,7 +38,6 @@
   backdrop-filter: blur(10px);
   padding: 2.5rem;
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .form-header {
@@ -100,7 +97,6 @@
 .form-group textarea:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .form-group textarea {
@@ -143,7 +139,6 @@
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
 }
 
 .submit-btn:disabled {
@@ -177,7 +172,6 @@
   backdrop-filter: blur(10px);
   padding: 2.5rem;
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .historial-header {
@@ -225,7 +219,6 @@
   background: white;
   border-radius: 15px;
   padding: 1.5rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   border-left: 4px solid #667eea;
 }
 
@@ -306,7 +299,6 @@
   backdrop-filter: blur(10px);
   padding: 2.5rem;
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .stats-header {

@@ -80,13 +80,6 @@ function MyReservations() {
     const [hour, minute] = reserva.hora_fin.split(':').map(Number);
     const fechaReserva = new Date(year, month - 1, day, hour, minute);
     
-    console.log('🔍 Comparando fechas:', {
-      reserva: reserva.fecha + ' ' + reserva.hora_fin,
-      fechaReserva: fechaReserva.toLocaleString(),
-      ahora: ahora.toLocaleString(),
-      esPasada: fechaReserva < ahora
-    });
-    
     return fechaReserva < ahora;
   };
 

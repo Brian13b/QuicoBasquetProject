@@ -156,34 +156,6 @@ function AdminRevenue({ reservas, filtros, setFiltros }) {
           </table>
         </div>
       </div>
-
-      {/* Estadísticas adicionales */}
-      <div className="ingresos-estadisticas">
-        <h3>📋 Estadísticas Adicionales</h3>
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon">🎯</div>
-            <div className="stat-content">
-              <h4>Reservas Pagadas</h4>
-              <p>{reservas.filter(r => r.estado !== 'cancelada').length}</p>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">💰</div>
-            <div className="stat-content">
-              <h4>Precio Promedio</h4>
-              <p>${reservas.length > 0 ? (totalIngresos / reservas.filter(r => r.estado !== 'cancelada').length).toFixed(0) : 0}</p>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">📈</div>
-            <div className="stat-content">
-              <h4>Método Preferido</h4>
-              <p>{(reporteIngresos.efectivo || 0) > (reporteIngresos.transferencia || 0) ? 'Efectivo' : 'Transferencia'}</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

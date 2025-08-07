@@ -211,7 +211,7 @@
 
 .nav-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 25px rgba(75, 75, 75, 0.4);
   background: #686868;
 }
 
@@ -619,7 +619,7 @@ tr:hover {
 
 .ingreso-card-principal:hover {
   transform: translateY(-8px);
-  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 15px 40px rgba(75, 75, 75, 0.3);
 }
 
 .ingreso-card-principal.total {
@@ -737,6 +737,13 @@ tr:hover {
   margin: 0;
   font-size: 2.5rem;
   font-weight: 700;
+}
+
+/* Usuarios */
+.usuarios-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
 }
 
 /* Notificaciones */

@@ -80,7 +80,6 @@ function TimeGridSelector({
         
         // Si la reserva fue creada para la fecha actual, actualizar
         if (fecha === fechaActual) {
-          console.log('🔄 Actualizando TimeGridSelector después de crear reserva');
           fetchData();
         }
       }
@@ -89,7 +88,6 @@ function TimeGridSelector({
     const handleSuscripcionCreada = (event) => {
       const { canchaId: eventCanchaId } = event.detail;
       if (eventCanchaId === canchaId) {
-        console.log('🔄 Actualizando TimeGridSelector después de crear suscripción');
         fetchData();
       }
     };
@@ -119,9 +117,6 @@ function TimeGridSelector({
         suscripcionService.obtenerSuscripcionesPorFecha(fecha, canchaId)
       ]);
       
-      console.log('📋 Reservas encontradas:', reservasData);
-      console.log('📅 Suscripciones encontradas:', suscripcionesData);
-      
       setReservas(reservasData);
       setSuscripciones(suscripcionesData);
     } catch (error) {
@@ -143,7 +138,6 @@ function TimeGridSelector({
       const isInRange = timeSlot >= reservaStart && timeSlot < reservaEnd;
       
       if (isInRange) {
-        console.log(`🔴 Horario ${timeSlot} está ocupado por reserva: ${reservaStart}-${reservaEnd}`);
       }
       
       return isInRange;
@@ -158,7 +152,6 @@ function TimeGridSelector({
       const isInRange = timeSlot >= suscripcionStart && timeSlot < suscripcionEnd;
       
       if (isInRange) {
-        console.log(`🔵 Horario ${timeSlot} está ocupado por suscripción: ${suscripcionStart}-${suscripcionEnd}`);
       }
       
       return isInRange;
@@ -175,8 +168,6 @@ function TimeGridSelector({
   };
 
   const handleDateClick = (date) => {
-    console.log('📅 Click en fecha:', date.toDateString());
-    console.log('📅 Fecha actual seleccionada:', selectedDate.toDateString());
     onDateChange(date);
     setSelectedTime(null);
   };

@@ -34,7 +34,7 @@ function AdminUsers({
   const bloquearUsuario = async (userId, bloqueado) => {
     try {
       await authService.bloquearUsuario(userId, bloqueado, token)
-      fetchData() // Recargar datos
+      fetchData() 
     } catch (error) {
       console.error('Error al bloquear usuario:', error)
       alert('Error al bloquear/desbloquear usuario')
@@ -52,7 +52,7 @@ function AdminUsers({
       }
       
       await authService.sendNotification(notificationData, token)
-      alert('📧 Notificación por email enviada exitosamente')
+      alert('Notificación por email enviada exitosamente')
     } catch (error) {
       console.error('Error al enviar notificación:', error)
       alert('Error al enviar la notificación por email')
@@ -81,7 +81,7 @@ function AdminUsers({
     <div className="usuarios-tab">
       {/* Estadísticas de usuarios */}
       <div className="usuarios-stats">
-        <h3>📊 Estadísticas de Usuarios</h3>
+        <h3>Estadísticas de Usuarios</h3>
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-icon">👥</div>
@@ -113,17 +113,17 @@ function AdminUsers({
           </div>
         </div>
       </div>
-
+    
       {/* Filtros */}
       <div className="filtros-section">
         <div className="filtros-header">
-          <h3>🔍 Filtros de Usuarios</h3>
+          <h3>Filtros de Usuarios</h3>
           <button 
             className="btn-secondary btn-small"
             onClick={limpiarFiltros}
             title="Limpiar filtros de usuarios"
           >
-            🗑️ Limpiar
+            Limpiar
           </button>
         </div>
         <div className="filtros-grid">

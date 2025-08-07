@@ -91,7 +91,7 @@ function AdminReservations({
     try {
       await reservaService.actualizarEstadoReserva(reservaId, nuevoEstado)
       showAlert('success', 'Estado Actualizado', `Reserva ${nuevoEstado} exitosamente`)
-      fetchData() // Recargar datos
+      fetchData() 
     } catch (error) {
       console.error('Error al cambiar estado:', error)
       showAlert('error', 'Error', 'Error al cambiar el estado de la reserva')
@@ -126,7 +126,6 @@ function AdminReservations({
   // Funciones para suscripciones
   const actualizarDescuentoSuscripcion = async (suscripcionId, nuevoDescuento) => {
     try {
-      console.log('💰 Actualizando descuento de suscripción:', suscripcionId, nuevoDescuento);
       await suscripcionService.actualizarDescuentoSuscripcion(suscripcionId, nuevoDescuento)
       showAlert('success', 'Descuento Actualizado', `Descuento actualizado a ${nuevoDescuento}% exitosamente`)
       fetchData()
@@ -431,7 +430,7 @@ function AdminReservations({
                               onClick={() => cambiarEstadoReserva(reserva.id, 'confirmada')}
                               title="Confirmar reserva"
                             >
-                              <span className="icon"><i className="fa-regular fa-check"></i></span>
+                              <span className="icon"><i class="fa-solid fa-check"></i></span>
                             </button>
                           ) : (
                             <button 
@@ -439,7 +438,7 @@ function AdminReservations({
                               onClick={() => cambiarEstadoReserva(reserva.id, 'cancelada')}
                               title="Cancelar reserva"
                             >
-                              <span className="icon"><i className="fa-regular fa-xmark"></i></span>
+                              <span className="icon"><i class="fa-solid fa-x"></i></span>
                             </button>
                           )}
                         </>
@@ -452,7 +451,7 @@ function AdminReservations({
                               onClick={() => cambiarEstadoSuscripcion(reserva.id.replace('suscripcion_', ''), 'activa')}
                               title="Activar suscripción"
                             >
-                              <span className="icon"><i className="fa-regular fa-check"></i></span>
+                              <span className="icon"><i class="fa-solid fa-check"></i></span>
                             </button>
                           ) : (
                             <button 
@@ -460,7 +459,7 @@ function AdminReservations({
                               onClick={() => cambiarEstadoSuscripcion(reserva.id.replace('suscripcion_', ''), 'cancelada')}
                               title="Cancelar suscripción"
                             >
-                              <span className="icon"><i className="fa-regular fa-xmark"></i></span>
+                              <span className="icon"><i class="fa-solid fa-x"></i></span>
                             </button>
                           )}
                         </>
@@ -476,7 +475,7 @@ function AdminReservations({
                             disabled={reserva.estado_pago === 'pagado'}
                             title="Marcar como pagado"
                           >
-                            <span className="icon"><i class="fa-regular fa-check"></i></span>
+                            <span className="icon"><i class="fa-regular fa-thumbs-up"></i></span>
                           </button>
                           <button 
                             className="btn-small btn-warning"

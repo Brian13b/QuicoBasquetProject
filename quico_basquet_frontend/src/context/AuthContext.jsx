@@ -40,12 +40,11 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      console.log('🚀 Iniciando login con email (flujo correcto)');
+      console.log('🚀 Iniciando login con email');
       
       // PASO 1: Autenticar con Firebase Auth
       console.log('📧 Autenticando con Firebase Auth...');
       const firebaseResult = await firebaseEmailLogin(email, password);
-      console.log('✅ Usuario autenticado en Firebase:', firebaseResult.user.uid);
       
       // PASO 2: Obtener el ID token de Firebase
       console.log('🔐 Obteniendo ID token de Firebase...');
@@ -55,7 +54,7 @@ export function AuthProvider({ children }) {
       // PASO 3: Enviar token al backend para validar y obtener usuario de BD propia
       console.log('📤 Enviando token al backend para validación...');
       const backendResponse = await authService.loginWithFirebaseToken(firebaseIdToken);
-      console.log('✅ Usuario validado en backend:', backendResponse);
+      console.log('✅ Usuario validado en backend');
       
       // PASO 4: Configurar estado local con el token del backend
       localStorage.setItem('token', backendResponse.access_token);
@@ -84,12 +83,11 @@ export function AuthProvider({ children }) {
 
   const loginWithGoogle = async () => {
     try {
-      console.log('🚀 Iniciando login con Google (flujo correcto)');
+      console.log('🚀 Iniciando login con Google');
       
       // PASO 1: Autenticar con Firebase Google Auth
       console.log('📧 Autenticando con Google via Firebase...');
       const firebaseResult = await firebaseGoogleLogin();
-      console.log('✅ Usuario autenticado con Google:', firebaseResult.user.uid);
       
       // PASO 2: Esperar un poco más para asegurar que el token sea válido
       console.log('⏰ Esperando para que el token sea válido...');
@@ -125,7 +123,7 @@ export function AuthProvider({ children }) {
       while (retryCount < maxRetries) {
         try {
           backendResponse = await authService.loginWithFirebaseToken(firebaseIdToken);
-          console.log('✅ Usuario validado/creado en backend:', backendResponse);
+          console.log('✅ Usuario validado/creado en backend');
           break;
         } catch (error) {
           retryCount++;
@@ -216,25 +214,25 @@ export function AuthProvider({ children }) {
     setShowCompleteProfile(false);
     setPendingFirebaseUser(null);
     setPendingFirebaseToken(null);
-    // Cerrar sesión de Firebase ya que no se completó el registro
+    
     firebaseLogout();
   };
 
   const register = async (email, password, additionalData = {}) => {
     try {
-      console.log('🚀 Iniciando flujo de registro correcto:', { email, additionalData });
+      console.log('🚀 Iniciando flujo de registro correcto');
       
-      // PASO 1: Registrar en Firebase Auth
+      // Registrar en Firebase Auth
       console.log('📧 Registrando en Firebase Auth...');
       const firebaseResult = await firebaseRegister(email, password);
-      console.log('✅ Usuario creado en Firebase:', firebaseResult.user.uid);
+      console.log('✅ Usuario creado en Firebase');
       
-      // PASO 2: Obtener el ID token de Firebase
+      // Obtener el ID token de Firebase
       console.log('🔐 Obteniendo ID token de Firebase...');
       const firebaseIdToken = await firebaseResult.user.getIdToken();
       console.log('✅ ID token obtenido');
       
-      // PASO 3: Enviar token al backend para validar y guardar en BD propia
+      // Enviar token al backend para validar y guardar en BD propia
       console.log('📤 Enviando datos al backend para validación y almacenamiento...');
       const userData = {
         email: firebaseResult.user.email,
@@ -243,11 +241,11 @@ export function AuthProvider({ children }) {
         firebase_uid: firebaseResult.user.uid,
       };
       
-      // El backend validará el token y guardará los datos
+      // El backend valida el token y guarda los datos
       const backendResponse = await authService.registerWithFirebaseToken(userData, firebaseIdToken);
-      console.log('✅ Usuario guardado en backend:', backendResponse);
+      console.log('✅ Usuario guardado en backend');
       
-      // PASO 4: Configurar estado local con el token del backend
+      // Configurar estado local con el token del backend
       if (backendResponse.access_token) {
         localStorage.setItem('token', backendResponse.access_token);
         setToken(backendResponse.access_token);
@@ -273,24 +271,20 @@ export function AuthProvider({ children }) {
             throw new Error(`Error de Firebase: ${error.message}`);
         }
       }
-      
-      // Error del backend
       throw error;
     }
   };
 
   const logout = async () => {
     try {
-      // Cerrar sesión en Firebase
       await firebaseLogout();
     } catch (error) {
       console.error('Error al cerrar sesión en Firebase:', error);
     } finally {
-      // Limpiar estado local independientemente del resultado de Firebase
       localStorage.removeItem('token');
       setToken(null);
       setCurrentUser(null);
-      navigate('/');  // Redirigir al inicio en lugar de /login
+      navigate('/');  
     }
   };
 
