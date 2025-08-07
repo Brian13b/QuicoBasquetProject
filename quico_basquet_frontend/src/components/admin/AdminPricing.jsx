@@ -123,11 +123,6 @@ function AdminPricing({ token }) {
 
   return (
     <div className="admin-pricing">
-      <div className="pricing-header">
-        <h2>Gestión de Precios y Descuentos</h2>
-        <p>Configura los precios por deporte y descuentos</p>
-      </div>
-
       <div className="pricing-controls">
         <div className="form-group">
           <label htmlFor="cancha-select">Seleccionar Cancha:</label>

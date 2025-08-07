@@ -22,15 +22,13 @@ function TimeGridSelector({
   // Horarios disponibles cada 30 minutos (de 8:00 AM a 23:00 PM)
   const timeSlots = [];
   for (let hour = 8; hour <= 23; hour++) {
-    // Agregar hora en punto
     timeSlots.push(hour.toString().padStart(2, '0') + ':00');
-    // Agregar media hora (excepto para las 23:00 que es el último horario)
     if (hour < 23) {
       timeSlots.push(hour.toString().padStart(2, '0') + ':30');
     }
   }
 
-  // Días de la semana para navegación (5 días por vista)
+  // Días de la semana para navegación
   const allDays = [];
   const today = new Date();
   
@@ -45,15 +43,14 @@ function TimeGridSelector({
     });
   }
 
-  // Obtener solo 5 días para mostrar (con navegación)
+  // Obtener solo 5 días para mostrar
   const startIndex = currentWeekIndex * 5;
   const weekDays = allDays.slice(startIndex, startIndex + 5);
 
-  // Verificar si un día está seleccionado (fuera del loop para evitar recálculos)
+  // Verificar si un día está seleccionado
   const isDateSelected = (date) => {
     const isSelected = date.toDateString() === selectedDate.toDateString();
     if (isSelected) {
-      console.log('✅ Día seleccionado:', date.toDateString());
     }
     return isSelected;
   };
@@ -72,13 +69,11 @@ function TimeGridSelector({
     const handleReservaCreada = (event) => {
       const { fecha, canchaId: eventCanchaId } = event.detail;
       if (eventCanchaId === canchaId) {
-        // Formatear la fecha actual para comparar
         const year = selectedDate.getFullYear();
         const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
         const day = String(selectedDate.getDate()).padStart(2, '0');
         const fechaActual = `${year}-${month}-${day}`;
         
-        // Si la reserva fue creada para la fecha actual, actualizar
         if (fecha === fechaActual) {
           fetchData();
         }
@@ -128,35 +123,48 @@ function TimeGridSelector({
     }
   };
 
+  const toMinutes = (timeStr) => {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    return hours * 60 + minutes;
+  };
+
   const isTimeSlotBooked = (time) => {
     // Verificar si hay una reserva en este horario
+    const timeSlotMinutes = toMinutes(time.substring(0, 5));
+
     const isReserved = reservas.some(reserva => {
-      const reservaStart = reserva.hora_inicio.substring(0, 5);
-      const reservaEnd = reserva.hora_fin.substring(0, 5);
-      const timeSlot = time.substring(0, 5);
-      
-      const isInRange = timeSlot >= reservaStart && timeSlot < reservaEnd;
-      
-      if (isInRange) {
+      const start = toMinutes(reserva.hora_inicio.substring(0, 5));
+      let end = toMinutes(reserva.hora_fin.substring(0, 5));
+  
+      if (end <= start) {
+        end += 1440; // suma 24 horas si cruza la medianoche
       }
-      
-      return isInRange;
-    });
+  
+      let current = timeSlotMinutes;
+      if (current < start) {
+        current += 1440; // también suma 24h para comparar bien con reserva que cruza medianoche
+      }
+  
+      return current >= start && current < end;
+    });  
     
     // Verificar si hay una suscripción en este horario
     const isSubscribed = suscripciones.some(suscripcion => {
-      const suscripcionStart = suscripcion.hora_inicio.substring(0, 5);
-      const suscripcionEnd = suscripcion.hora_fin.substring(0, 5);
-      const timeSlot = time.substring(0, 5);
-      
-      const isInRange = timeSlot >= suscripcionStart && timeSlot < suscripcionEnd;
-      
-      if (isInRange) {
+      const start = toMinutes(suscripcion.hora_inicio.substring(0, 5));
+      let end = toMinutes(suscripcion.hora_fin.substring(0, 5));
+  
+      if (end <= start) {
+        end += 1440;
       }
-      
-      return isInRange;
+  
+      let current = timeSlotMinutes;
+      if (current < start) {
+        current += 1440;
+      }
+  
+      return current >= start && current < end;
     });
-    
+  
     return isReserved || isSubscribed;
   };
 
@@ -287,13 +295,13 @@ function TimeGridSelector({
                 className={`time-slot ${isBooked ? 'booked' : ''} ${isSelected ? 'selected' : ''}`}
                 onClick={() => handleTimeClick(time)}
               >
-                                 <div className="time-slot-content">
-                   <span className="time-hour">{getTimeDisplay(time)}</span>
-                   {isBooked && <span className="booked-text">Ocupado</span>}
-                   {isSelected && !isBooked && (
-                     <span className="selected-text">Seleccionado</span>
-                   )}
-                 </div>
+                <div className="time-slot-content">
+                  <span className="time-hour">{getTimeDisplay(time)}</span>
+                  {isBooked && <span className="booked-text">Ocupado</span>}
+                  {isSelected && !isBooked && (
+                    <span className="selected-text">Seleccionado</span>
+                  )}
+                </div>
               </div>
             );
           })}
