@@ -18,15 +18,11 @@ def initialize_firebase():
         return firebase_service
 
     firebase_credentials_json = os.getenv("FIREBASE_CREDENTIALS_JSON")
-    firebase_credentials_path = settings.FIREBASE_CREDENTIALS_PATH
 
     try:
         if firebase_credentials_json:
             logger.info("🔐 Inicializando Firebase desde variable de entorno JSON")
             cred = credentials.Certificate(json.loads(firebase_credentials_json))
-        elif firebase_credentials_path and os.path.exists(firebase_credentials_path):
-            logger.info(f"🔐 Inicializando Firebase desde archivo: {firebase_credentials_path}")
-            cred = credentials.Certificate(firebase_credentials_path)
         else:
             # Opcional: intentar buscar en rutas comunes (fallback para desarrollo)
             current_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
