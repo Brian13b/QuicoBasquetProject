@@ -2,6 +2,7 @@ import smtplib
 import logging
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.header import Header
 from app.config.settings import settings
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ def send_email(to_email: str, subject: str, message: str) -> bool:
         msg = MIMEMultipart()
         msg['From'] = settings.GMAIL_USER
         msg['To'] = to_email
-        msg['Subject'] = subject
+        msg['Subject'] = Header(subject, 'utf-8')
         
         # Agregar el cuerpo del mensaje con codificación UTF-8
         msg.attach(MIMEText(message, 'plain', 'utf-8'))
