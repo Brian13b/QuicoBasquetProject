@@ -19,7 +19,7 @@ app = FastAPI(title="Quico Básquet API", version="1.0.0")
 # Configurar CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Para desarrollo - en producción especificar dominios
+    allow_origins=["https://quico-basquet-project.vercel.app/"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
