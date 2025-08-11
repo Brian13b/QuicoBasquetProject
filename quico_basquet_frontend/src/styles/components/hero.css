@@ -2,7 +2,7 @@
   height: 90vh;
   min-height: 400px;
   background: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3)),
-    url('/src/assets/hero.jpg') center/cover no-repeat;
+    url('/public/assets/hero.jpg') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
