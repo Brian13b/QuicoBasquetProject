@@ -1,5 +1,4 @@
 /* Dashboard de Administrador */
-
 .admin-container {
   min-height: 100vh;
   background: #f5f5f5;
@@ -1050,6 +1049,7 @@ tr:hover {
   }
 
   .admin-header {
+    position: relative;
     padding: 1rem;
     flex-direction: column;
     gap: 1rem;
