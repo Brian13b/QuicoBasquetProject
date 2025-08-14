@@ -11,7 +11,7 @@ function Header() {
     <header>
       <div className="container">
         <div className="logo">
-          <img src="quico_basquet_frontend\public\assets\logo.png" alt="Quico Basquet Logo" />
+          <img src="\assets\logo.png" alt="Quico Basquet Logo" />
         </div>
 
         <div className="login">
