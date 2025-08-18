@@ -43,9 +43,11 @@ function TimeGridSelector({
     });
   }
 
-  // Obtener solo 5 días para mostrar
-  const startIndex = currentWeekIndex * 5;
-  const weekDays = allDays.slice(startIndex, startIndex + 5);
+  // Obtener días para mostrar (5 en desktop, 2 en móvil)
+  const isMobile = window.innerWidth <= 768;
+  const daysToShow = isMobile ? 2 : 5;
+  const startIndex = currentWeekIndex * daysToShow;
+  const weekDays = allDays.slice(startIndex, startIndex + daysToShow);
 
   // Verificar si un día está seleccionado
   const isDateSelected = (date) => {
@@ -56,7 +58,7 @@ function TimeGridSelector({
   };
 
   const canGoPrevious = currentWeekIndex > 0;
-  const canGoNext = startIndex + 5 < allDays.length;
+  const canGoNext = startIndex + daysToShow < allDays.length;
 
   // Función para verificar si un horario está en el pasado
   const isTimeSlotInPast = (time) => {
@@ -232,11 +234,19 @@ function TimeGridSelector({
     } else if (date.toDateString() === tomorrow.toDateString()) {
       return 'Mañana';
     } else {
-      return date.toLocaleDateString('es-AR', { 
-        weekday: 'short', 
-        day: 'numeric',
-        month: 'numeric'
-      });
+      // Formato más compacto para móvil
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        return date.toLocaleDateString('es-AR', { 
+          weekday: 'short'
+        }) + ' ' + date.getDate();
+      } else {
+        return date.toLocaleDateString('es-AR', { 
+          weekday: 'short', 
+          day: 'numeric',
+          month: 'numeric'
+        });
+      }
     }
   };
 
