@@ -58,6 +58,35 @@ function TimeGridSelector({
   const canGoPrevious = currentWeekIndex > 0;
   const canGoNext = startIndex + 5 < allDays.length;
 
+  // Función para verificar si un horario está en el pasado
+  const isTimeSlotInPast = (time) => {
+    const now = new Date();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const selectedDateOnly = new Date(selectedDate);
+    selectedDateOnly.setHours(0, 0, 0, 0);
+    
+    // Si es un día anterior, todos los horarios están en el pasado
+    if (selectedDateOnly < today) {
+      return true;
+    }
+    
+    // Si es hoy, verificar la hora
+    if (selectedDateOnly.getTime() === today.getTime()) {
+      const [hours, minutes] = time.split(':').map(Number);
+      const timeSlotDate = new Date();
+      timeSlotDate.setHours(hours, minutes, 0, 0);
+      
+      // Agregar una hora de margen (bloquear hasta una hora después de la hora actual)
+      const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+      
+      return timeSlotDate <= oneHourLater;
+    }
+    
+    return false;
+  };
+
   useEffect(() => {
     if (canchaId && selectedDate) {
       fetchData();
@@ -169,7 +198,8 @@ function TimeGridSelector({
   };
 
   const handleTimeClick = (time) => {
-    if (!isTimeSlotBooked(time)) {
+    // Verificar si el horario está en el pasado o está reservado
+    if (!isTimeSlotInPast(time) && !isTimeSlotBooked(time)) {
       setSelectedTime(time);
       onTimeSelect(time);
     }
@@ -241,6 +271,7 @@ function TimeGridSelector({
           className={`nav-arrow ${!canGoPrevious ? 'disabled' : ''}`}
           onClick={handlePreviousWeek}
           disabled={!canGoPrevious}
+          aria-label="Semana anterior"
         >
           ‹
         </button>
@@ -262,6 +293,7 @@ function TimeGridSelector({
            className={`nav-arrow ${!canGoNext ? 'disabled' : ''}`}
            onClick={handleNextWeek}
            disabled={!canGoNext}
+           aria-label="Semana siguiente"
          >
            ›
          </button>
@@ -287,18 +319,21 @@ function TimeGridSelector({
         <div className="time-slots-grid">
           {timeSlots.map(time => {
             const isBooked = isTimeSlotBooked(time);
+            const isInPast = isTimeSlotInPast(time);
             const isSelected = selectedTime === time;
+            const isDisabled = isBooked || isInPast;
             
             return (
               <div
                 key={time}
-                className={`time-slot ${isBooked ? 'booked' : ''} ${isSelected ? 'selected' : ''}`}
+                className={`time-slot ${isBooked ? 'booked' : ''} ${isInPast ? 'past' : ''} ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}`}
                 onClick={() => handleTimeClick(time)}
               >
                 <div className="time-slot-content">
                   <span className="time-hour">{getTimeDisplay(time)}</span>
                   {isBooked && <span className="booked-text">Ocupado</span>}
-                  {isSelected && !isBooked && (
+                  {isInPast && <span className="past-text">Pasado</span>}
+                  {isSelected && !isDisabled && (
                     <span className="selected-text">Seleccionado</span>
                   )}
                 </div>
@@ -310,10 +345,10 @@ function TimeGridSelector({
 
       {/* Información y leyenda */}
       <div className="selector-footer">
-                 <div className="info-text">
-           <span className="info-icon">ℹ</span>
-           Selecciona fecha, horario y deporte para tu reserva
-         </div>
+        <div className="info-text">
+          <span className="info-icon">ℹ</span>
+          Selecciona fecha, horario y deporte para tu reserva
+        </div>
         
         <div className="legend">
           <div className="legend-item">
@@ -323,6 +358,10 @@ function TimeGridSelector({
           <div className="legend-item">
             <div className="legend-color booked"></div>
             <span>Ocupado</span>
+          </div>
+          <div className="legend-item">
+            <div className="legend-color past"></div>
+            <span>Pasado</span>
           </div>
           <div className="legend-item">
             <div className="legend-color selected"></div>
