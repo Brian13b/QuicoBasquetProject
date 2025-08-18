@@ -35,6 +35,15 @@ def crear_reserva_endpoint(reserva_in: ReservaCreate, current_user: User = Depen
         if reserva_in.metodo_pago not in MetodoPagoEnum.__members__.values():
             raise HTTPException(status_code=400, detail="Método de pago no válido")
         
+        # Validar nombre_cliente solo si el usuario es admin
+        if current_user.rol == "admin":
+            if not reserva_in.nombre_cliente or len(reserva_in.nombre_cliente.strip()) < 2:
+                raise HTTPException(status_code=400, detail="Como administrador, debes especificar el nombre del cliente (mínimo 2 caracteres)")
+        else:
+            # Para usuarios normales, no permitir nombre_cliente
+            if reserva_in.nombre_cliente:
+                raise HTTPException(status_code=400, detail="Los usuarios normales no pueden especificar nombre de cliente")
+        
         # Calcular duración en minutos usando el servicio
         from app.services.reserva_service import calcular_duracion_reserva
         duracion_minutos = calcular_duracion_reserva(reserva_in.hora_inicio, reserva_in.hora_fin)
@@ -74,8 +83,8 @@ def crear_reserva_endpoint(reserva_in: ReservaCreate, current_user: User = Depen
         # Obtener información de pago
         info_pago = obtener_info_pago(reserva.metodo_pago, reserva.precio)
         
-        # Enviar email de confirmación si el usuario tiene email
-        if current_user.email:
+        # Enviar email de confirmación si el usuario tiene email (solo para usuarios normales)
+        if current_user.email and current_user.rol != "admin":
             reserva_data_for_email = {
                 'fecha': str(reserva.fecha),
                 'hora_inicio': str(reserva.hora_inicio),
@@ -96,10 +105,7 @@ def crear_reserva_endpoint(reserva_in: ReservaCreate, current_user: User = Depen
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         print(f"❌ Error inesperado: {str(e)}")
-        print(f"📊 Tipo de error: {type(e)}")
-        import traceback
-        print(f"🔍 Traceback: {traceback.format_exc()}")
-        raise HTTPException(status_code=500, detail=f"Error interno del servidor: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error interno del servidor")
 
 @router.get("/mis", response_model=List[ReservaOut])
 def listar_mis_reservas(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):

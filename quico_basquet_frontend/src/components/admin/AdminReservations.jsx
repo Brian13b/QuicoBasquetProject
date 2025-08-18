@@ -58,9 +58,11 @@ function AdminReservations({
         const usuario = usuarios.find(u => u.id === reserva.user_id);
         const nombreUsuario = usuario?.nombre || '';
         const emailUsuario = usuario?.email || '';
+        const nombreCliente = reserva.nombre_cliente || '';
         
         coincideUsuario = nombreUsuario.toLowerCase().includes(busqueda) || 
-                         emailUsuario.toLowerCase().includes(busqueda);
+                         emailUsuario.toLowerCase().includes(busqueda) ||
+                         nombreCliente.toLowerCase().includes(busqueda);
       }
       
       const coincideCancha = filtros.cancha === 'todas' || reserva.cancha_id === parseInt(filtros.cancha)
@@ -315,12 +317,12 @@ function AdminReservations({
           </div>
 
           <div className="filtro-item">
-            <label>Buscar Usuario:</label>
+            <label>Buscar Usuario/Cliente:</label>
             <input 
               type="text" 
               value={filtros.usuarioEspecifico}
               onChange={(e) => setFiltros(prev => ({...prev, usuarioEspecifico: e.target.value}))}
-              placeholder="Nombre o email del usuario..."
+              placeholder="Nombre del usuario, email o cliente..."
             />
           </div>
 
@@ -398,7 +400,18 @@ function AdminReservations({
                   </td>
                   <td>{formatearHora(reserva.hora_inicio)} - {formatearHora(reserva.hora_fin)}</td>
                   <td>{canchas.find(c => c.id === reserva.cancha_id)?.nombre || 'N/A'}</td>
-                  <td>{usuarios.find(u => u.id === reserva.user_id)?.nombre || 'N/A'}</td>
+                  <td>
+                    {reserva.nombre_cliente ? (
+                      <div>
+                        <div><strong>{reserva.nombre_cliente}</strong></div>
+                        <small style={{ color: '#666' }}>
+                          (Admin: {usuarios.find(u => u.id === reserva.user_id)?.nombre || 'N/A'})
+                        </small>
+                      </div>
+                    ) : (
+                      usuarios.find(u => u.id === reserva.user_id)?.nombre || 'N/A'
+                    )}
+                  </td>
                   <td>{reserva.deporte}</td>
                   <td>
                     ${reserva.precio}

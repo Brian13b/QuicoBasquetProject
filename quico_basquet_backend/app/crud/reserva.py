@@ -41,7 +41,8 @@ def crear_reserva(db: Session, reserva_in, precio: float, metodo_pago: str) -> R
         precio=precio,
         metodo_pago=metodo_pago,
         estado="confirmada",
-        estado_pago="pendiente"
+        estado_pago="pendiente",
+        nombre_cliente=reserva_in.nombre_cliente
     )
     
     db.add(db_reserva)

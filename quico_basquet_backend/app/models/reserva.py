@@ -17,6 +17,7 @@ class Reserva(Base):
     precio = Column(Float, nullable=False)
     pago_id = Column(String, nullable=True)
     metodo_pago = Column(String, nullable=False, default="efectivo") # "efectivo" o "transferencia"
+    nombre_cliente = Column(String, nullable=True) # Nombre del cliente para reservas del admin
 
     user = relationship("User", back_populates="reservas")
     cancha = relationship("Cancha", back_populates="reservas")

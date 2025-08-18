@@ -232,6 +232,60 @@
   text-align: center;
 }
 
+/* Estilos para la información de la reserva */
+.reserva-info {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.reserva-info p {
+  margin: 8px 0;
+  font-size: 0.95rem;
+  color: #495057;
+}
+
+.reserva-info strong {
+  color: #212529;
+  font-weight: 600;
+}
+
+/* Estilos para el campo de nombre del cliente */
+.form-group input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group input[type="text"]::placeholder {
+  color: #adb5bd;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+/* Estilos para campos requeridos */
+.form-group label[for*="cliente"]::after {
+  content: " *";
+  color: #dc3545;
+  font-weight: bold;
+}
+
 /* Responsive */
 @media (max-width: 480px) {
   .booking-modal {

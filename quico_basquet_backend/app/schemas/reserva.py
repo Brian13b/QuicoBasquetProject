@@ -17,6 +17,7 @@ class ReservaBase(BaseModel):
     estado_pago: Optional[str] = "pendiente"
     pago_id: Optional[str] = None
     metodo_pago: MetodoPagoEnum = MetodoPagoEnum.efectivo
+    nombre_cliente: Optional[str] = None  # Nombre del cliente para reservas del admin
 
     @field_validator('fecha', mode='before')
     @classmethod
@@ -37,6 +38,18 @@ class ReservaBase(BaseModel):
         
         return v
 
+    @field_validator('nombre_cliente')
+    @classmethod
+    def validate_nombre_cliente(cls, v):
+        """Validar el nombre del cliente"""
+        if v is not None:
+            v = v.strip()
+            if len(v) < 2:
+                raise ValueError("El nombre del cliente debe tener al menos 2 caracteres")
+            if len(v) > 100:
+                raise ValueError("El nombre del cliente no puede exceder 100 caracteres")
+        return v
+
 class ReservaCreate(ReservaBase):
     precio: Optional[float] = None  # Opcional, el backend lo calculará
 
@@ -51,6 +64,7 @@ class ReservaUpdate(BaseModel):
     precio: Optional[float] = None
     pago_id: Optional[str] = None
     metodo_pago: Optional[MetodoPagoEnum] = None
+    nombre_cliente: Optional[str] = None
 
 class ReservaInternal(ReservaBase):
     user_id: int
@@ -74,6 +88,7 @@ class ReservaCombinadaOut(BaseModel):
     metodo_pago: str
     estado: str
     estado_pago: str
+    nombre_cliente: Optional[str] = None  # Nombre del cliente
     tipo: Optional[str] = None  # "suscripcion" o None para reservas normales
     dia_semana: Optional[int] = None  # Solo para suscripciones
     fecha_inicio: Optional[Union[date, str]] = None  # Solo para suscripciones

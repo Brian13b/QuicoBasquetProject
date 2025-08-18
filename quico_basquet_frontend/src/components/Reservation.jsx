@@ -81,7 +81,7 @@ function Reservation() {
     setAlertConfig(prev => ({ ...prev, isOpen: false }));
   };
 
-  const handleSubmitReserva = async () => {
+  const handleSubmitReserva = async (nombreCliente = null) => {
     if (!currentUser) {
       showAlert('error', 'Error de Autenticación', 'Debes iniciar sesión para crear una reserva.');
       return;
@@ -109,6 +109,11 @@ function Reservation() {
       deporte,
       metodo_pago: metodoPago
     };
+
+    // Agregar nombre_cliente solo si el usuario es admin y se proporciona
+    if (currentUser.rol === 'admin' && nombreCliente) {
+      reservaData.nombre_cliente = nombreCliente;
+    }
 
     try {
       await createReserva(reservaData);
@@ -142,6 +147,9 @@ function Reservation() {
         } else if (err.message.includes('bloqueado')) {
           errorTitle = 'Cuenta Bloqueada';
           errorMessage = 'Tu cuenta ha sido bloqueada. No puedes crear reservas.';
+        } else if (err.message.includes('nombre del cliente')) {
+          errorTitle = 'Nombre del Cliente Requerido';
+          errorMessage = err.message;
         } else {
           errorMessage = err.message;
         }
