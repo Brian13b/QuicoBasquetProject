@@ -88,31 +88,43 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: white;
-  color: #667eea;
-  font-size: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border: 2px solid #667eea;
+  background: #667eea;
+  color: white;
+  font-size: 1.6rem;
   font-weight: bold;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+  min-width: 44px;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .nav-arrow:hover:not(.disabled) {
-  background: #667eea;
+  background: #5a6fd8;
+  border-color: #5a6fd8;
   color: white;
-  transform: scale(1.1);
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(102, 126, 234, 0.35);
+}
+
+.nav-arrow:active:not(.disabled) {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .nav-arrow.disabled {
-  background: #f8f9fa;
-  color: #dee2e6;
+  background: #e9ecef;
+  color: #adb5bd;
+  border-color: #dee2e6;
   cursor: not-allowed;
-  box-shadow: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: none;
 }
 
 .days-container {
@@ -348,14 +360,34 @@
   }
 
   .week-navigation {
-    gap: 12px;
-    padding: 16px;
+    gap: 16px;
+    padding: 20px 16px;
+    justify-content: space-between;
   }
 
   .nav-arrow {
-    width: 35px;
-    height: 35px;
-    font-size: 1.2rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.4rem;
+    min-width: 40px;
+    min-height: 40px;
+    background: #667eea;
+    color: white;
+    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.25);
+    border: 2px solid #667eea;
+  }
+
+  .nav-arrow:hover:not(.disabled) {
+    background: #5a6fd8;
+    transform: scale(1.08);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.35);
+  }
+
+  .nav-arrow.disabled {
+    background: #e9ecef;
+    color: #adb5bd;
+    border-color: #dee2e6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .days-container {
@@ -420,9 +452,28 @@
   }
 
   .nav-arrow {
-    width: 30px;
-    height: 30px;
-    font-size: 1rem;
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
+    min-width: 44px;
+    min-height: 44px;
+    background: #667eea;
+    color: white;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    border: 2px solid #667eea;
+  }
+
+  .nav-arrow:hover:not(.disabled) {
+    background: #5a6fd8;
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  }
+
+  .nav-arrow.disabled {
+    background: #e9ecef;
+    color: #adb5bd;
+    border-color: #dee2e6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .day-button {
@@ -480,4 +531,65 @@
 
 .time-grid-container::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+/* Mejoras específicas para dispositivos móviles */
+@media (max-width: 480px) {
+  .nav-arrow {
+    /* Asegurar que las flechas sean fáciles de tocar en móvil */
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+    min-width: 48px;
+    min-height: 48px;
+    /* Mejorar el contraste */
+    background: #4a5568;
+    border-color: #4a5568;
+    box-shadow: 0 4px 12px rgba(74, 85, 104, 0.3);
+  }
+
+  .nav-arrow:hover:not(.disabled) {
+    background: #2d3748;
+    border-color: #2d3748;
+    box-shadow: 0 6px 16px rgba(74, 85, 104, 0.4);
+  }
+
+  .nav-arrow.disabled {
+    background: #e2e8f0;
+    color: #a0aec0;
+    border-color: #cbd5e0;
+  }
+
+  /* Mejorar el espaciado en móvil */
+  .week-navigation {
+    padding: 16px 12px;
+    gap: 12px;
+  }
+
+  .days-container {
+    gap: 6px;
+  }
+}
+
+/* Mejoras para dispositivos con pantalla táctil */
+@media (hover: none) and (pointer: coarse) {
+  .nav-arrow {
+    /* Asegurar que las flechas sean más grandes para dispositivos táctiles */
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    min-height: 50px;
+    font-size: 1.6rem;
+  }
+
+  .nav-arrow:hover:not(.disabled) {
+    /* En dispositivos táctiles, no usar hover */
+    transform: none;
+  }
+
+  .nav-arrow:active:not(.disabled) {
+    transform: scale(0.95);
+    background: #2d3748;
+    border-color: #2d3748;
+  }
 } 
