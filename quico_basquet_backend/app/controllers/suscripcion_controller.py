@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.schemas.suscripcion import SuscripcionCreate, SuscripcionOut, SuscripcionUpdate, SuscripcionRenovacion
 from app.crud.suscripcion import (
@@ -23,7 +23,12 @@ from datetime import datetime
 router = APIRouter(prefix="/suscripciones", tags=["Suscripciones"])
 
 @router.post("/", response_model=SuscripcionOut)
-def crear_suscripcion_endpoint(suscripcion_in: SuscripcionCreate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+def crear_suscripcion_endpoint(
+    suscripcion_in: SuscripcionCreate, 
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
     """Crear una nueva suscripción"""
     try:
         print("🚀 === CREACIÓN DE SUSCRIPCIÓN ===")
@@ -40,9 +45,9 @@ def crear_suscripcion_endpoint(suscripcion_in: SuscripcionCreate, current_user: 
         suscripcion = crear_suscripcion(db, suscripcion_in, current_user.id)
         print(f"✅ Suscripción creada con ID: {suscripcion.id}")
         
-        # Enviar email de confirmación si el usuario tiene email
+        # 🚀 ENVIAR EMAIL EN BACKGROUND (NO BLOQUEA LA RESPUESTA)
         if current_user.email:
-            print(f"📧 Enviando email de confirmación a: {current_user.email}")
+            print(f"📧 Programando envío de email en background a: {current_user.email}")
             suscripcion_data = {
                 'dia_semana': suscripcion.dia_semana,
                 'hora_inicio': str(suscripcion.hora_inicio),
@@ -50,13 +55,14 @@ def crear_suscripcion_endpoint(suscripcion_in: SuscripcionCreate, current_user: 
                 'deporte': suscripcion.deporte,
                 'precio_mensual': suscripcion.precio_mensual
             }
-            send_subscription_confirmation_email(
+            background_tasks.add_task(
+                send_subscription_confirmation_email,
                 current_user.email,
                 current_user.nombre,
                 suscripcion_data
             )
         
-        print("🎉 Suscripción creada exitosamente")
+        print("🎉 Suscripción creada exitosamente (email en background)")
         return suscripcion
     except ValueError as e:
         print(f"❌ Error de validación: {str(e)}")

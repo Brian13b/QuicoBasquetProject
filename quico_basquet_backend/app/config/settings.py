@@ -26,6 +26,11 @@ class Settings:
     GMAIL_APP_PASSWORD: str = os.getenv("GMAIL_APP_PASSWORD", "")
     GMAIL_USER: str = os.getenv("GMAIL_USER", "basquetquico@gmail.com")
     
+    # 🚀 CONFIGURACIÓN SENDGRID (RECOMENDADO PARA RENDER)
+    SENDGRID_API_KEY: str = os.getenv("SENDGRID_API_KEY", "")
+    FROM_EMAIL: str = os.getenv("FROM_EMAIL", "noreply@quicobasquet.com")
+    FROM_NAME: str = os.getenv("FROM_NAME", "Quico Básquet")
+    
     # Configuración de datos bancarios
     DATOS_BANCARIOS: dict = {
         "alias": os.getenv("ALIAS_TRANSFERENCIA", ""),

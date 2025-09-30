@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.schemas.reserva import ReservaCreate, ReservaOut, ReservaInternal, MetodoPagoEnum, ReservaCombinadaOut
 from app.crud.reserva import crear_reserva, listar_reservas_usuario, cancelar_reserva, listar_reservas_por_cancha_fecha, reactivar_reserva
@@ -16,7 +16,12 @@ from datetime import datetime
 router = APIRouter(prefix="/reservas", tags=["Reservas"])
 
 @router.post("/", response_model=ReservaOut)
-def crear_reserva_endpoint(reserva_in: ReservaCreate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+def crear_reserva_endpoint(
+    reserva_in: ReservaCreate, 
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
     try:
         print("🚀 === CREACIÓN DE RESERVA ===")
         print(f"👤 Usuario: {current_user.id} ({current_user.nombre})")
@@ -83,8 +88,9 @@ def crear_reserva_endpoint(reserva_in: ReservaCreate, current_user: User = Depen
         # Obtener información de pago
         info_pago = obtener_info_pago(reserva.metodo_pago, reserva.precio)
         
-        # Enviar email de confirmación si el usuario tiene email (solo para usuarios normales)
+        # 🚀 ENVIAR EMAIL EN BACKGROUND (NO BLOQUEA LA RESPUESTA)
         if current_user.email and current_user.rol != "admin":
+            print(f"📧 Programando envío de email en background a: {current_user.email}")
             reserva_data_for_email = {
                 'fecha': str(reserva.fecha),
                 'hora_inicio': str(reserva.hora_inicio),
@@ -92,7 +98,8 @@ def crear_reserva_endpoint(reserva_in: ReservaCreate, current_user: User = Depen
                 'deporte': reserva.deporte,
                 'precio': reserva.precio
             }
-            send_reservation_confirmation_email(
+            background_tasks.add_task(
+                send_reservation_confirmation_email,
                 current_user.email, 
                 current_user.nombre, 
                 reserva_data_for_email, 
