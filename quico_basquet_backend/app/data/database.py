@@ -8,7 +8,6 @@ load_dotenv()
 
 CONNECTION_DB = os.getenv("DATABASE_URL")
 
-# 🚀 CONFIGURACIÓN OPTIMIZADA PARA NEON + RENDER
 engine = create_engine(
     CONNECTION_DB,
     # Pool de conexiones optimizado

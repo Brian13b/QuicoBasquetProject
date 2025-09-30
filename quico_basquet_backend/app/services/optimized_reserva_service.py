@@ -2,6 +2,8 @@ from datetime import time, datetime, date, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
 from typing import List
+from app.models.reserva import Reserva
+from app.models.suscripcion import Suscripcion
 
 def verificar_solapamiento_suscripcion_optimizado(
     db: Session, 
@@ -17,14 +19,6 @@ def verificar_solapamiento_suscripcion_optimizado(
     Versión optimizada que usa una sola query para verificar solapamientos
     en lugar de hacer múltiples queries secuenciales
     """
-    from app.models.reserva import Reserva
-    from app.models.suscripcion import Suscripcion
-    
-    print(f"🚀 Verificación optimizada de solapamiento:")
-    print(f"   - Cancha: {cancha_id}")
-    print(f"   - Día de semana: {dia_semana}")
-    print(f"   - Horario: {hora_inicio} - {hora_fin}")
-    print(f"   - Período: {fecha_inicio} a {fecha_fin}")
     
     # 1. Generar todas las fechas que coincidan con el día de la semana
     fechas_objetivo = []
@@ -109,20 +103,14 @@ def verificar_solapamiento_bulk_insert(
     Verifica solapamientos para múltiples reservas de una vez
     Útil para suscripciones que crean varias reservas automáticamente
     """
-    from app.models.reserva import Reserva
-    from app.models.suscripcion import Suscripcion
     
     if not reservas_a_crear:
         return False
-    
-    print(f"🔍 Verificación bulk para {len(reservas_a_crear)} reservas")
     
     # Extraer todas las fechas y canchas únicas
     fechas_canchas = set()
     for reserva in reservas_a_crear:
         fechas_canchas.add((reserva['fecha'], reserva['cancha_id']))
-    
-    print(f"   - Combinaciones fecha/cancha únicas: {len(fechas_canchas)}")
     
     # UNA SOLA QUERY para todas las reservas existentes
     fechas = [fc[0] for fc in fechas_canchas]
@@ -191,9 +179,6 @@ def crear_reservas_bulk(db: Session, reservas_data: List[dict]) -> List:
     """
     Crea múltiples reservas en una sola transacción
     """
-    from app.models.reserva import Reserva
-    
-    print(f"💾 Creando {len(reservas_data)} reservas en bulk")
     
     reservas_objetos = []
     for data in reservas_data:

@@ -31,23 +31,14 @@ def crear_suscripcion_endpoint(
 ):
     """Crear una nueva suscripción"""
     try:
-        print("🚀 === CREACIÓN DE SUSCRIPCIÓN ===")
-        print(f"👤 Usuario: {current_user.id} ({current_user.nombre})")
-        print(f"📋 Datos recibidos: {suscripcion_in.model_dump()}")
-        
         # Validar que el user_id coincida con el usuario autenticado
         if suscripcion_in.user_id != current_user.id:
-            print(f"❌ Error: user_id no coincide. Enviado: {suscripcion_in.user_id}, Usuario actual: {current_user.id}")
             raise HTTPException(status_code=400, detail="El user_id no coincide con el usuario autenticado")
         
-        print("✅ Validación de usuario exitosa")
-        
         suscripcion = crear_suscripcion(db, suscripcion_in, current_user.id)
-        print(f"✅ Suscripción creada con ID: {suscripcion.id}")
         
         # 🚀 ENVIAR EMAIL EN BACKGROUND (NO BLOQUEA LA RESPUESTA)
         if current_user.email:
-            print(f"📧 Programando envío de email en background a: {current_user.email}")
             suscripcion_data = {
                 'dia_semana': suscripcion.dia_semana,
                 'hora_inicio': str(suscripcion.hora_inicio),
@@ -61,8 +52,6 @@ def crear_suscripcion_endpoint(
                 current_user.nombre,
                 suscripcion_data
             )
-        
-        print("🎉 Suscripción creada exitosamente (email en background)")
         return suscripcion
     except ValueError as e:
         print(f"❌ Error de validación: {str(e)}")
@@ -92,8 +81,6 @@ def obtener_suscripciones_por_fecha(
         
         # Obtener suscripciones activas para esa fecha
         suscripciones = obtener_suscripciones_activas_por_fecha(db, fecha_dt, cancha_id)
-        
-        print(f"📅 Suscripciones encontradas para {fecha} en cancha {cancha_id}: {len(suscripciones)}")
         
         return suscripciones
     except ValueError as e:

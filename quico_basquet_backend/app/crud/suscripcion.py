@@ -15,18 +15,15 @@ def crear_suscripcion(db: Session, suscripcion_in: SuscripcionCreate, user_id: i
     # Validar horario
     print(f"⏰ Validando horario: {suscripcion_in.hora_inicio} - {suscripcion_in.hora_fin}")
     if not validar_horario_reserva(suscripcion_in.hora_inicio, suscripcion_in.hora_fin):
-        print("❌ Horario fuera del rango permitido")
         raise ValueError("El horario seleccionado está fuera del horario de atención (8:00 AM - 12:00 AM). Por favor, elige un horario dentro de este rango.")
     print("✅ Horario válido")
     
-    # Verificar solapamiento con reservas Y suscripciones para todos los días del período (OPTIMIZADO)
-    print(f"� Verificando solapamiento OPTIMIZADO para cancha {suscripcion_in.cancha_id}, día {suscripcion_in.dia_semana}")
+    # Verificar solapamiento con reservas Y suscripciones para todos los días del período
     if verificar_solapamiento_suscripcion_optimizado(db, suscripcion_in.cancha_id, suscripcion_in.dia_semana, suscripcion_in.hora_inicio, suscripcion_in.hora_fin, suscripcion_in.fecha_inicio, suscripcion_in.fecha_fin):
         dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
         dia_nombre = dias_semana[suscripcion_in.dia_semana] if 0 <= suscripcion_in.dia_semana < 7 else f"día {suscripcion_in.dia_semana}"
-        print(f"❌ Solapamiento detectado para {dia_nombre}")
         raise ValueError(f"Ya existe una reserva o suscripción para el horario {suscripcion_in.hora_inicio} - {suscripcion_in.hora_fin} los {dia_nombre} en el período seleccionado. Por favor, elige otro horario, día de la semana o período.")
-    print("✅ No hay solapamiento (verificación optimizada)")
+    print("✅ No hay solapamiento")
     
     # Calcular duración en horas
     duracion_minutos = int((suscripcion_in.hora_fin.hour - suscripcion_in.hora_inicio.hour) * 60 + 
@@ -46,7 +43,7 @@ def crear_suscripcion(db: Session, suscripcion_in: SuscripcionCreate, user_id: i
         hora_inicio=suscripcion_in.hora_inicio,
         hora_fin=suscripcion_in.hora_fin,
         precio_mensual=precio_mensual_calculado, 
-        descuento=0.0,  # No usar descuento adicional, los descuentos ya están aplicados en el precio
+        descuento=0.0, 
         fecha_inicio=suscripcion_in.fecha_inicio,
         fecha_fin=suscripcion_in.fecha_fin,
         metodo_pago=suscripcion_in.metodo_pago,
