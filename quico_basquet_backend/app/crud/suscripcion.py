@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from app.models.suscripcion import Suscripcion
 from app.schemas.suscripcion import SuscripcionCreate, SuscripcionUpdate
 from app.services.reserva_service import hay_solapamiento_suscripcion, validar_horario_reserva, hay_solapamiento_reserva_suscripcion, verificar_solapamiento_suscripcion_multiple_dias
+from app.services.optimized_reserva_service import verificar_solapamiento_suscripcion_optimizado
 from app.services.precio_service import calcular_precio_suscripcion_mensual
 from app.config.settings import DURACION_MINIMA_RESERVA, DURACION_MAXIMA_RESERVA
 from datetime import datetime, time
@@ -18,14 +19,14 @@ def crear_suscripcion(db: Session, suscripcion_in: SuscripcionCreate, user_id: i
         raise ValueError("El horario seleccionado está fuera del horario de atención (8:00 AM - 12:00 AM). Por favor, elige un horario dentro de este rango.")
     print("✅ Horario válido")
     
-    # Verificar solapamiento con reservas Y suscripciones para todos los días del período
-    print(f"🔍 Verificando solapamiento para cancha {suscripcion_in.cancha_id}, día {suscripcion_in.dia_semana}")
-    if verificar_solapamiento_suscripcion_multiple_dias(db, suscripcion_in.cancha_id, suscripcion_in.dia_semana, suscripcion_in.hora_inicio, suscripcion_in.hora_fin, suscripcion_in.fecha_inicio, suscripcion_in.fecha_fin):
+    # Verificar solapamiento con reservas Y suscripciones para todos los días del período (OPTIMIZADO)
+    print(f"� Verificando solapamiento OPTIMIZADO para cancha {suscripcion_in.cancha_id}, día {suscripcion_in.dia_semana}")
+    if verificar_solapamiento_suscripcion_optimizado(db, suscripcion_in.cancha_id, suscripcion_in.dia_semana, suscripcion_in.hora_inicio, suscripcion_in.hora_fin, suscripcion_in.fecha_inicio, suscripcion_in.fecha_fin):
         dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
         dia_nombre = dias_semana[suscripcion_in.dia_semana] if 0 <= suscripcion_in.dia_semana < 7 else f"día {suscripcion_in.dia_semana}"
         print(f"❌ Solapamiento detectado para {dia_nombre}")
         raise ValueError(f"Ya existe una reserva o suscripción para el horario {suscripcion_in.hora_inicio} - {suscripcion_in.hora_fin} los {dia_nombre} en el período seleccionado. Por favor, elige otro horario, día de la semana o período.")
-    print("✅ No hay solapamiento")
+    print("✅ No hay solapamiento (verificación optimizada)")
     
     # Calcular duración en horas
     duracion_minutos = int((suscripcion_in.hora_fin.hour - suscripcion_in.hora_inicio.hour) * 60 + 
