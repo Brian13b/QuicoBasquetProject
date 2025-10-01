@@ -1,30 +1,19 @@
 import smtplib
 import logging
+import sendgrid
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from app.config.settings import settings
-
-# SendGrid imports
-try:
-    import sendgrid
-    from sendgrid.helpers.mail import Mail, From, To, Subject, PlainTextContent, HtmlContent
-    SENDGRID_AVAILABLE = True
-except ImportError:
-    SENDGRID_AVAILABLE = False
-    logger.warning("SendGrid no disponible. Solo se usará SMTP.")
+from sendgrid.helpers.mail import Mail, From, To, Subject, PlainTextContent, HtmlContent
 
 logger = logging.getLogger(__name__)
 
 def send_with_sendgrid_api(to_email: str, subject: str, message: str) -> bool:
     """
-    Envía un email usando SendGrid API (ideal para Render)
+    Envía un email usando SendGrid API 
     """
     try:
-        if not SENDGRID_AVAILABLE:
-            logger.error("SendGrid no está disponible")
-            return False
-            
         if not settings.SENDGRID_API_KEY:
             logger.error("SendGrid API Key no configurada")
             return False
@@ -118,7 +107,7 @@ def send_email(to_email: str, subject: str, message: str) -> bool:
     logger.info(f"🚀 Iniciando envío de email a {to_email}: {subject}")
     
     # 1. Intentar SendGrid API primero (recomendado para Render)
-    if settings.SENDGRID_API_KEY and SENDGRID_AVAILABLE:
+    if settings.SENDGRID_API_KEY:
         logger.info("📡 Intentando envío via SendGrid API...")
         if send_with_sendgrid_api(to_email, subject, message):
             return True

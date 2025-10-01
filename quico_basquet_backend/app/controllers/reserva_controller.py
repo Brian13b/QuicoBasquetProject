@@ -6,7 +6,7 @@ from app.services.suscripcion_service import obtener_suscripciones_activas_por_f
 from app.data.database import get_db
 from app.services.auth_service import get_current_user
 from app.services.pago_service import obtener_info_pago
-from app.services.email_service import send_reservation_confirmation_email, send_reservation_cancellation_email
+from app.services.email_service import send_reservation_confirmation_email, send_reservation_cancellation_email, send_email
 from app.services.precio_service import calcular_precio_reserva
 from app.models.user import User
 from app.models.cancha import Cancha
@@ -88,7 +88,7 @@ def crear_reserva_endpoint(
         # Obtener información de pago
         info_pago = obtener_info_pago(reserva.metodo_pago, reserva.precio)
         
-        # 🚀 ENVIAR EMAIL EN BACKGROUND (NO BLOQUEA LA RESPUESTA)
+        # 🚀 ENVIAR EMAIL EN BACKGROUND
         if current_user.email and current_user.rol != "admin":
             print(f"📧 Programando envío de email en background a: {current_user.email}")
             reserva_data_for_email = {
@@ -105,6 +105,37 @@ def crear_reserva_endpoint(
                 reserva_data_for_email, 
                 info_pago
             )
+        
+        # 📧 NOTIFICACIÓN AUTOMÁTICA AL NEGOCIO
+        print(f"📧 Enviando notificación de nueva reserva al negocio...")
+        cliente_nombre = reserva.nombre_cliente if reserva.nombre_cliente else current_user.nombre
+        metodo_pago_texto = info_pago['metodo'].title() if info_pago.get('metodo') else reserva.metodo_pago
+        
+        mensaje_negocio = f"""
+🏀 NUEVA RESERVA CREADA
+
+📅 Fecha: {reserva.fecha}
+⏰ Horario: {reserva.hora_inicio} - {reserva.hora_fin}
+🏀 Deporte: {reserva.deporte}
+👤 Cliente: {cliente_nombre}
+💰 Precio: ${reserva.precio}
+💳 Método pago: {metodo_pago_texto}
+
+📍 Creada por: {current_user.nombre} ({current_user.rol})
+📧 Email: {current_user.email or 'No especificado'}
+
+¡Nueva reserva confirmada en el sistema!
+
+Saludos,
+Sistema Quico Básquet
+        """.strip()
+        
+        background_tasks.add_task(
+            send_email,
+            "basquetquico@gmail.com",
+            f"🏀 Nueva reserva - {reserva.fecha} {reserva.hora_inicio} - {cliente_nombre}",
+            mensaje_negocio
+        )
         
         return {**reserva.__dict__, "info_pago": info_pago}
     except ValueError as e:
@@ -248,12 +279,17 @@ def actualizar_precio_reserva_endpoint(
     return actualizar_precio_reserva(db, reserva_id, precio_data.get("precio"))
 
 @router.delete("/{reserva_id}", response_model=ReservaOut)
-def cancelar_reserva_endpoint(reserva_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+def cancelar_reserva_endpoint(
+    reserva_id: int, 
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
     reserva = cancelar_reserva(db, reserva_id, current_user.id)
     
     if not reserva:
         raise HTTPException(status_code=404, detail="Reserva no encontrada")
-    
+
     # Enviar email de cancelación si el usuario tiene email
     user = db.query(User).filter(User.id == reserva.user_id).first()
     if user and user.email:
@@ -263,11 +299,43 @@ def cancelar_reserva_endpoint(reserva_id: int, current_user: User = Depends(get_
             'hora_fin': str(reserva.hora_fin),
             'deporte': reserva.deporte
         }
-        send_reservation_cancellation_email(user.email, user.nombre, reserva_data)
+        background_tasks.add_task(
+            send_reservation_cancellation_email,
+            user.email, 
+            user.nombre, 
+            reserva_data
+        )
     
-    return reserva
+    # 📧 NOTIFICACIÓN AUTOMÁTICA AL NEGOCIO
+    print(f"📧 Enviando notificación de cancelación al negocio...")
+    cliente_nombre = reserva.nombre_cliente if reserva.nombre_cliente else (user.nombre if user else "Cliente desconocido")
+    
+    mensaje_cancelacion = f"""
+❌ RESERVA CANCELADA
 
-@router.patch("/{reserva_id}/reactivar", response_model=ReservaOut)
+📅 Fecha: {reserva.fecha}
+⏰ Horario: {reserva.hora_inicio} - {reserva.hora_fin}
+🏀 Deporte: {reserva.deporte}
+👤 Cliente: {cliente_nombre}
+💰 Precio original: ${reserva.precio}
+
+📍 Cancelada por: {current_user.nombre} ({current_user.rol})
+📧 Email: {current_user.email or 'No especificado'}
+
+⚠️ Reserva cancelada en el sistema.
+
+Saludos,
+Sistema Quico Básquet
+    """.strip()
+    
+    background_tasks.add_task(
+        send_email,
+        "basquetquico@gmail.com",
+        f"❌ Reserva cancelada - {reserva.fecha} {reserva.hora_inicio} - {cliente_nombre}",
+        mensaje_cancelacion
+    )
+
+    return reserva@router.patch("/{reserva_id}/reactivar", response_model=ReservaOut)
 def reactivar_reserva_endpoint(
     reserva_id: int, 
     current_user: User = Depends(get_current_user), 
