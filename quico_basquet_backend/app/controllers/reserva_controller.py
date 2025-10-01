@@ -6,7 +6,7 @@ from app.services.suscripcion_service import obtener_suscripciones_activas_por_f
 from app.data.database import get_db
 from app.services.auth_service import get_current_user
 from app.services.pago_service import obtener_info_pago
-from app.services.email_service import send_reservation_confirmation_email, send_reservation_cancellation_email, send_email
+from app.services.email_service import send_reservation_cancellation_email_admin, send_reservation_confirmation_email, send_reservation_cancellation_email, send_email, send_reservation_confirmation_email_admin
 from app.services.precio_service import calcular_precio_reserva
 from app.models.user import User
 from app.models.cancha import Cancha
@@ -108,33 +108,20 @@ def crear_reserva_endpoint(
         
         # 📧 NOTIFICACIÓN AUTOMÁTICA AL NEGOCIO
         print(f"📧 Enviando notificación de nueva reserva al negocio...")
-        cliente_nombre = reserva.nombre_cliente if reserva.nombre_cliente else current_user.nombre
-        metodo_pago_texto = info_pago['metodo'].title() if info_pago.get('metodo') else reserva.metodo_pago
-        
-        mensaje_negocio = f"""
-🏀 NUEVA RESERVA CREADA
-
-📅 Fecha: {reserva.fecha}
-⏰ Horario: {reserva.hora_inicio} - {reserva.hora_fin}
-🏀 Deporte: {reserva.deporte}
-👤 Cliente: {cliente_nombre}
-💰 Precio: ${reserva.precio}
-💳 Método pago: {metodo_pago_texto}
-
-📍 Creada por: {current_user.nombre} ({current_user.rol})
-📧 Email: {current_user.email or 'No especificado'}
-
-¡Nueva reserva confirmada en el sistema!
-
-Saludos,
-Sistema Quico Básquet
-        """.strip()
+        reserva_data_for_email_admin = {
+            'fecha': str(reserva.fecha),
+            'hora_inicio': str(reserva.hora_inicio),
+            'hora_fin': str(reserva.hora_fin),
+            'deporte': reserva.deporte,
+            'nombre_cliente': reserva.nombre_cliente if reserva.nombre_cliente else current_user.nombre,
+            'precio': reserva.precio,
+        }
         
         background_tasks.add_task(
-            send_email,
-            "basquetquico@gmail.com",
-            f"🏀 Nueva reserva - {reserva.fecha} {reserva.hora_inicio} - {cliente_nombre}",
-            mensaje_negocio
+            send_reservation_confirmation_email_admin,
+            current_user.nombre,
+            reserva_data_for_email_admin,
+            info_pago
         )
         
         return {**reserva.__dict__, "info_pago": info_pago}
@@ -308,31 +295,19 @@ def cancelar_reserva_endpoint(
     
     # 📧 NOTIFICACIÓN AUTOMÁTICA AL NEGOCIO
     print(f"📧 Enviando notificación de cancelación al negocio...")
-    cliente_nombre = reserva.nombre_cliente if reserva.nombre_cliente else (user.nombre if user else "Cliente desconocido")
-    
-    mensaje_cancelacion = f"""
-❌ RESERVA CANCELADA
-
-📅 Fecha: {reserva.fecha}
-⏰ Horario: {reserva.hora_inicio} - {reserva.hora_fin}
-🏀 Deporte: {reserva.deporte}
-👤 Cliente: {cliente_nombre}
-💰 Precio original: ${reserva.precio}
-
-📍 Cancelada por: {current_user.nombre} ({current_user.rol})
-📧 Email: {current_user.email or 'No especificado'}
-
-⚠️ Reserva cancelada en el sistema.
-
-Saludos,
-Sistema Quico Básquet
-    """.strip()
+    reserva_data = {
+            'fecha': str(reserva.fecha),
+            'hora_inicio': str(reserva.hora_inicio),
+            'hora_fin': str(reserva.hora_fin),
+            'deporte': reserva.deporte,
+            'cliente_nombre': user.nombre if user else "Desconocido",
+            'precio': reserva.precio
+        }
     
     background_tasks.add_task(
-        send_email,
-        "basquetquico@gmail.com",
-        f"❌ Reserva cancelada - {reserva.fecha} {reserva.hora_inicio} - {cliente_nombre}",
-        mensaje_cancelacion
+        send_reservation_cancellation_email_admin,
+        current_user.nombre,
+        reserva_data
     )
 
     return reserva@router.patch("/{reserva_id}/reactivar", response_model=ReservaOut)

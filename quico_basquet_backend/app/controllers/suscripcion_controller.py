@@ -12,7 +12,9 @@ from app.data.database import get_db
 from app.services.email_service import (
     send_subscription_confirmation_email, 
     send_subscription_cancellation_email,
-    send_subscription_renewal_email
+    send_subscription_renewal_email,
+    send_subscription_confirmation_email_admin,
+    send_subscription_cancellation_email_admin
 )
 from app.models.user import User
 from app.models.suscripcion import Suscripcion
@@ -52,6 +54,25 @@ def crear_suscripcion_endpoint(
                 current_user.nombre,
                 suscripcion_data
             )
+        
+        # 📧 NOTIFICACIÓN AUTOMÁTICA AL NEGOCIO
+        print(f"📧 Enviando notificación de nueva suscripción al negocio...")
+        suscripcion_data_admin = {
+            'dia_semana': suscripcion.dia_semana,
+            'hora_inicio': str(suscripcion.hora_inicio),
+            'hora_fin': str(suscripcion.hora_fin),
+            'deporte': suscripcion.deporte,
+            'cliente_nombre': current_user.nombre,
+            'precio_mensual': suscripcion.precio_mensual,
+            'fecha_inicio': str(suscripcion.fecha_inicio) if hasattr(suscripcion, 'fecha_inicio') else 'No especificada',
+            'fecha_fin': str(suscripcion.fecha_fin) if hasattr(suscripcion, 'fecha_fin') else 'No especificada'
+        }
+        
+        background_tasks.add_task(
+            send_subscription_confirmation_email_admin,
+            current_user.nombre,
+            suscripcion_data_admin
+        )
         return suscripcion
     except ValueError as e:
         print(f"❌ Error de validación: {str(e)}")
@@ -111,7 +132,12 @@ def actualizar_suscripcion_endpoint(
     return suscripcion
 
 @router.delete("/{suscripcion_id}", response_model=SuscripcionOut)
-def cancelar_suscripcion_endpoint(suscripcion_id: int, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+def cancelar_suscripcion_endpoint(
+    suscripcion_id: int, 
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_user), 
+    db: Session = Depends(get_db)
+):
     """Cancelar una suscripción"""
     suscripcion = cancelar_suscripcion(db, suscripcion_id, current_user.id)
     
@@ -123,11 +149,29 @@ def cancelar_suscripcion_endpoint(suscripcion_id: int, current_user: User = Depe
             'hora_fin': str(suscripcion.hora_fin),
             'deporte': suscripcion.deporte
         }
-        send_subscription_cancellation_email(
+        background_tasks.add_task(
+            send_subscription_cancellation_email,
             current_user.email,
             current_user.nombre,
             suscripcion_data
         )
+    
+    # 📧 NOTIFICACIÓN AUTOMÁTICA AL NEGOCIO
+    print(f"📧 Enviando notificación de cancelación de suscripción al negocio...")
+    suscripcion_data_admin = {
+        'dia_semana': suscripcion.dia_semana,
+        'hora_inicio': str(suscripcion.hora_inicio),
+        'hora_fin': str(suscripcion.hora_fin),
+        'deporte': suscripcion.deporte,
+        'cliente_nombre': current_user.nombre,
+        'precio_mensual': suscripcion.precio_mensual
+    }
+    
+    background_tasks.add_task(
+        send_subscription_cancellation_email_admin,
+        current_user.nombre,
+        suscripcion_data_admin
+    )
     
     return suscripcion
 

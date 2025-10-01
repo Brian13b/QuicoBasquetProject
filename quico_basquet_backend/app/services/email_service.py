@@ -267,6 +267,34 @@ El equipo de Quico Básquet
     
     return send_email(user_email, subject, message)
 
+def send_subscription_confirmation_email_admin(user_name: str, suscripcion_data: dict) -> bool:
+    """
+    Envía email de confirmación de suscripción al administrador
+    """
+    subject = "✅ Nueva Suscripción Creada - Quico Básquet"
+    
+    # Convertir número de día a nombre
+    dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+    dia_nombre = dias_semana[suscripcion_data['dia_semana']] if 0 <= suscripcion_data['dia_semana'] < 7 else f"Día {suscripcion_data['dia_semana']}"
+    
+    message = f"""
+🔄 NUEVA SUSCRIPCIÓN CREADA
+
+📅 Día de la semana: {dia_nombre}
+⏰ Horario: {suscripcion_data['hora_inicio']} - {suscripcion_data['hora_fin']}
+🏀 Deporte: {suscripcion_data['deporte']}
+👤 Cliente: {suscripcion_data['cliente_nombre']}
+💰 Precio mensual: ${suscripcion_data['precio_mensual']}
+📅 Fecha inicio: {suscripcion_data.get('fecha_inicio', 'No especificada')}
+📅 Fecha fin: {suscripcion_data.get('fecha_fin', 'No especificada')}
+
+📍 Creada por: {user_name}
+
+¡Nueva suscripción confirmada en el sistema!
+    """
+    
+    return send_email("basquetquico@gmail.com", subject, message)
+
 def send_subscription_cancellation_email(user_email: str, user_name: str, suscripcion_data: dict) -> bool:
     """
     Envía email de cancelación de suscripción
@@ -295,6 +323,32 @@ El equipo de Quico Básquet
     """
     
     return send_email(user_email, subject, message)
+
+def send_subscription_cancellation_email_admin(user_name: str, suscripcion_data: dict) -> bool:
+    """
+    Envía email de cancelación de suscripción al administrador
+    """
+    subject = "❌ Suscripción Cancelada - Quico Básquet"
+    
+    # Convertir número de día a nombre
+    dias_semana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+    dia_nombre = dias_semana[suscripcion_data['dia_semana']] if 0 <= suscripcion_data['dia_semana'] < 7 else f"Día {suscripcion_data['dia_semana']}"
+    
+    message = f"""
+❌ SUSCRIPCIÓN CANCELADA
+
+📅 Día de la semana: {dia_nombre}
+⏰ Horario: {suscripcion_data['hora_inicio']} - {suscripcion_data['hora_fin']}
+🏀 Deporte: {suscripcion_data['deporte']}
+👤 Cliente: {suscripcion_data['cliente_nombre']}
+💰 Precio mensual: ${suscripcion_data['precio_mensual']}
+
+📍 Cancelada por: {user_name}
+
+⚠️ Suscripción cancelada en el sistema.
+    """
+    
+    return send_email("basquetquico@gmail.com", subject, message)
 
 def send_subscription_renewal_email(user_email: str, user_name: str, suscripcion_data: dict, nueva_fecha_fin: str) -> bool:
     """
@@ -351,3 +405,60 @@ El equipo de Quico Básquet
     """
     
     return send_email(user_email, subject, message)
+
+def send_reservation_confirmation_email_admin(user_name: str, reserva_data: dict, info_pago: dict) -> bool:
+    """
+    Envía email de confirmación de reserva al administrador
+    """
+    subject = "✅ Confirmación de Reserva - Quico Básquet"
+    
+    if info_pago['metodo'] == 'transferencia':
+        message = f"""
+🏀 NUEVA RESERVA CREADA
+
+📅 Fecha: {reserva_data['fecha']}
+⏰ Horario: {reserva_data['hora_inicio']} - {reserva_data['hora_fin']}
+🏀 Deporte: {reserva_data['deporte']}
+👤 Cliente: {reserva_data['cliente_nombre']}
+💰 Precio: ${reserva_data['precio']}
+💳 Método pago: Transferencia
+
+📍 Creada por: {user_name}
+
+¡Nueva reserva confirmada en el sistema!
+        """
+    else:
+        message = f"""
+🏀 NUEVA RESERVA CREADA
+
+📅 Fecha: {reserva_data['fecha']}
+⏰ Horario: {reserva_data['hora_inicio']} - {reserva_data['hora_fin']}
+🏀 Deporte: {reserva_data['deporte']}
+👤 Cliente: {reserva_data['cliente_nombre']}
+💰 Precio: ${reserva_data['precio']}
+💳 Método pago: Efectivo
+
+📍 Creada por: {user_name}
+
+¡Nueva reserva confirmada en el sistema!
+        """
+
+    return send_email("basquetquico@gmail.com", subject, message)
+
+def send_reservation_cancellation_email_admin(user_name: str, reserva_data: dict) -> bool:
+    """
+    Envía email de cancelación de reserva al administrador
+    """
+    subject = "❌ Reserva Cancelada - Quico Básquet"
+    
+    message = f"""
+🏀 RESERVA CANCELADA
+
+📅 Fecha: {reserva_data['fecha']}
+⏰ Horario: {reserva_data['hora_inicio']} - {reserva_data['hora_fin']}
+🏀 Deporte: {reserva_data['deporte']}
+👤 Cliente: {reserva_data['cliente_nombre']}
+💰 Precio: ${reserva_data['precio']}
+    """
+
+    return send_email("basquetquico@gmail.com", subject, message)
