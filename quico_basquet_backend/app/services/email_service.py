@@ -5,18 +5,84 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from app.config.settings import settings
 
+# SendGrid imports
+try:
+    import sendgrid
+    from sendgrid.helpers.mail import Mail, From, To, Subject, PlainTextContent, HtmlContent
+    SENDGRID_AVAILABLE = True
+except ImportError:
+    SENDGRID_AVAILABLE = False
+    logger.warning("SendGrid no disponible. Solo se usará SMTP.")
+
 logger = logging.getLogger(__name__)
 
-def send_email(to_email: str, subject: str, message: str) -> bool:
+def send_with_sendgrid_api(to_email: str, subject: str, message: str) -> bool:
     """
-    Envía un email usando Gmail SMTP
+    Envía un email usando SendGrid API (ideal para Render)
+    """
+    try:
+        if not SENDGRID_AVAILABLE:
+            logger.error("SendGrid no está disponible")
+            return False
+            
+        if not settings.SENDGRID_API_KEY:
+            logger.error("SendGrid API Key no configurada")
+            return False
+        
+        # Configurar SendGrid
+        sg = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
+        
+        # Crear el mensaje
+        from_email = From(settings.FROM_EMAIL, settings.FROM_NAME)
+        to_email_obj = To(to_email)
+        subject_obj = Subject(subject)
+        
+        # Convertir texto plano a HTML básico
+        html_message = message.replace('\n', '<br>')
+        
+        content = HtmlContent(f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="text-align: center; border-bottom: 2px solid #4a90e2; padding-bottom: 20px; margin-bottom: 20px;">
+                    <h1 style="color: #4a90e2; margin: 0;">{settings.FROM_NAME}</h1>
+                </div>
+                <div style="white-space: pre-wrap;">
+                    {html_message}
+                </div>
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 0.9em;">
+                    <p>Este es un mensaje automático, por favor no responder a este email.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """)
+        
+        mail = Mail(from_email, to_email_obj, subject_obj, content)
+        
+        # Enviar el email
+        response = sg.send(mail)
+        
+        if response.status_code in [200, 202]:
+            logger.info(f"📧 Email enviado via SendGrid a {to_email}: {subject}")
+            return True
+        else:
+            logger.error(f"SendGrid falló con código: {response.status_code}")
+            return False
+            
+    except Exception as e:
+        logger.error(f"Error al enviar email via SendGrid: {e}")
+        return False
+
+def send_with_smtp(to_email: str, subject: str, message: str) -> bool:
+    """
+    Envía un email usando Gmail SMTP (puede fallar en Render)
     """
     try:
         # Verificar si Gmail está configurado
         if not settings.GMAIL_APP_PASSWORD:
-            logger.warning("Gmail no configurado - email simulado")
-            logger.info(f"📧 Email simulado a {to_email}: {subject} - {message}")
-            return True
+            logger.warning("Gmail SMTP no configurado")
+            return False
         
         # Configurar el mensaje
         msg = MIMEMultipart()
@@ -37,12 +103,43 @@ def send_email(to_email: str, subject: str, message: str) -> bool:
         server.sendmail(settings.GMAIL_USER, to_email, text)
         server.quit()
         
-        logger.info(f"📧 Email enviado a {to_email}: {subject}")
+        logger.info(f"📧 Email enviado via SMTP a {to_email}: {subject}")
         return True
         
     except Exception as e:
-        logger.error(f"Error al enviar email: {e}")
+        logger.error(f"Error al enviar email via SMTP: {e}")
         return False
+
+def send_email(to_email: str, subject: str, message: str) -> bool:
+    """
+    Envía un email usando SendGrid API como método principal, con SMTP como fallback
+    Ideal para despliegues en Render donde SMTP puede estar bloqueado
+    """
+    logger.info(f"🚀 Iniciando envío de email a {to_email}: {subject}")
+    
+    # 1. Intentar SendGrid API primero (recomendado para Render)
+    if settings.SENDGRID_API_KEY and SENDGRID_AVAILABLE:
+        logger.info("📡 Intentando envío via SendGrid API...")
+        if send_with_sendgrid_api(to_email, subject, message):
+            return True
+        else:
+            logger.warning("⚠️ SendGrid API falló, intentando SMTP...")
+    else:
+        logger.info("📡 SendGrid no configurado, intentando SMTP...")
+    
+    # 2. Fallback a SMTP si SendGrid falla
+    if send_with_smtp(to_email, subject, message):
+        return True
+    
+    # 3. Si ambos fallan, simular envío en desarrollo
+    if not settings.SENDGRID_API_KEY and not settings.GMAIL_APP_PASSWORD:
+        logger.warning("📧 Ningún servicio de email configurado - simulando envío")
+        logger.info(f"📧 Email simulado a {to_email}: {subject} - {message[:100]}...")
+        return True
+    
+    # 4. Si todo falla
+    logger.error(f"❌ Falló el envío de email a {to_email}")
+    return False
 
 def enviar_notificacion_masiva(destinatarios: list, asunto: str, mensaje: str, tipo: str = "general") -> dict:
     """
@@ -93,7 +190,7 @@ def crear_template_notificacion(tipo: str, mensaje: str) -> str:
 ¿Necesitas ayuda? Contacta con nosotros:
 Email: basquetquico@gmail.com
 
-© 2024 Quico Básquet. Todos los derechos reservados.
+© 2025 Quico Básquet. Todos los derechos reservados.
     """
     
     return template
