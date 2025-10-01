@@ -49,22 +49,9 @@ function AdminReservations({
 
   // Filtrar reservas según filtros activos
   const reservasFiltradas = useMemo(() => {
-    let reservasFiltradas = reservas.filter(reserva => {
-      // 🔍 FILTRO DE FECHA MEJORADO:
-      let coincideFecha = true;
-      if (filtros.fecha) {
-        // Si hay una fecha específica, filtrar solo esa fecha
-        coincideFecha = reserva.fecha === filtros.fecha;
-      } else if (filtros.usuarioEspecifico && filtros.usuarioEspecifico.trim() !== '') {
-        // Si hay búsqueda por usuario SIN fecha específica, mostrar TODAS las reservas del usuario
-        coincideFecha = true;
-      } else {
-        // Si no hay filtros específicos, mostrar desde hoy en adelante
-        const hoy = new Date().toISOString().split('T')[0];
-        coincideFecha = reserva.fecha >= hoy;
-      }
+    return reservas.filter(reserva => {
+      const coincideFecha = !filtros.fecha || reserva.fecha === filtros.fecha
       
-      // 🔍 FILTRO DE USUARIO:
       let coincideUsuario = true;
       if (filtros.usuarioEspecifico && filtros.usuarioEspecifico.trim() !== '') {
         const busqueda = filtros.usuarioEspecifico.toLowerCase().trim();
@@ -83,18 +70,6 @@ function AdminReservations({
       const coincidePago = filtros.metodoPago === 'todos' || reserva.metodo_pago === filtros.metodoPago
 
       return coincideFecha && coincideUsuario && coincideCancha && coincideEstado && coincidePago
-    });
-    
-    // 📅 ORDENAR POR FECHA Y HORA (más recientes primero, luego por hora)
-    return reservasFiltradas.sort((a, b) => {
-      // Primero por fecha (descendente - más recientes primero)
-      const fechaComparison = new Date(b.fecha) - new Date(a.fecha);
-      if (fechaComparison !== 0) return fechaComparison;
-      
-      // Si las fechas son iguales, ordenar por hora de inicio (ascendente)
-      const horaA = a.hora_inicio || '00:00';
-      const horaB = b.hora_inicio || '00:00';
-      return horaA.localeCompare(horaB);
     });
   }, [reservas, filtros, usuarios])
 
@@ -245,12 +220,9 @@ function AdminReservations({
   }
 
   const limpiarFiltros = () => {
-    // Al limpiar filtros, establecer fecha de hoy para mostrar desde hoy en adelante
-    const hoy = new Date().toISOString().split('T')[0];
-    
     setFiltros(prev => ({
       ...prev,
-      fecha: hoy, // 👆 Filtrar desde hoy en adelante
+      fecha: '',
       usuarioEspecifico: '',
       cancha: 'todas',
       estado: 'todas',
@@ -328,9 +300,9 @@ function AdminReservations({
           <button 
             className="btn-secondary btn-small"
             onClick={limpiarFiltros}
-            title="Mostrar todas las reservas desde hoy en adelante"
+            title="Limpiar filtros"
           >
-            🔄 Desde Hoy
+            Limpiar filtros
           </button>
         </div>
         <div className="filtros-grid">
@@ -392,31 +364,6 @@ function AdminReservations({
               <option value="transferencia">Transferencia</option>
             </select>
           </div>
-        </div>
-      </div>
-
-      {/* 💡 MENSAJE INFORMATIVO DE FILTROS */}
-      <div className="filtros-info" style={{
-        background: 'rgba(74, 144, 226, 0.1)',
-        border: '1px solid rgba(74, 144, 226, 0.3)',
-        borderRadius: '10px',
-        padding: '1rem',
-        marginBottom: '1rem'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: '#4a90e2' }}>
-          <span>ℹ️</span>
-          <span>
-            {(() => {
-              if (filtros.usuarioEspecifico && filtros.usuarioEspecifico.trim() !== '') {
-                return `Mostrando TODAS las reservas que contienen "${filtros.usuarioEspecifico}" (sin límite de fecha)`;
-              } else if (filtros.fecha) {
-                return `Mostrando reservas para el ${filtros.fecha}`;
-              } else {
-                const hoy = new Date().toLocaleDateString('es-AR');
-                return `Mostrando reservas desde hoy (${hoy}) en adelante, ordenadas por fecha y hora`;
-              }
-            })()}
-          </span>
         </div>
       </div>
 
