@@ -347,25 +347,25 @@ function MultipleSubscriptionModal({ isOpen, onClose, onSuccess }) {
       const suscripcionesCreadas = [];
       
       for (const suscripcion of suscripciones) {
-                 try {
-           // Usar el precio del resumen dividido por el número de suscripciones
-           // Calcular el precio por suscripción individual
+        try {
+          // Usar el precio del resumen dividido por el número de suscripciones
+          // Calcular el precio por suscripción individual
           const precioPorSuscripcion = precioEstimado / suscripciones.length;
           
-                     // Preparar datos con formato correcto
-           const suscripcionData = {
-             user_id: currentUser.id,
-             cancha_id: parseInt(formData.cancha_id),
-             deporte: formData.deporte,
-             dia_semana: parseInt(suscripcion.dia_semana),
-             hora_inicio: suscripcion.hora_inicio, // Formato "HH:MM"
-             hora_fin: suscripcion.hora_fin,       // Formato "HH:MM"
-             fecha_inicio: formData.fecha_inicio,  // Formato "YYYY-MM-DD"
-             fecha_fin: formData.fecha_fin,        // Formato "YYYY-MM-DD"
-             precio_mensual: Math.round(precioPorSuscripcion),
-             descuento: 0.0, // 🔥 FORZADO A 0.0 - No usar descuento adicional, ya se aplican los descuentos de la cancha
-             metodo_pago: formData.metodo_pago
-           };
+          // Preparar datos con formato correcto
+          const suscripcionData = {
+            user_id: currentUser.id,
+            cancha_id: parseInt(formData.cancha_id),
+            deporte: formData.deporte,
+            dia_semana: parseInt(suscripcion.dia_semana),
+            hora_inicio: suscripcion.hora_inicio, // Formato "HH:MM"
+            hora_fin: suscripcion.hora_fin,       // Formato "HH:MM"
+            fecha_inicio: formData.fecha_inicio,  // Formato "YYYY-MM-DD"
+            fecha_fin: formData.fecha_fin,        // Formato "YYYY-MM-DD"
+            precio_mensual: Math.round(precioPorSuscripcion),
+            descuento: 0.0, // 🔥 FORZADO A 0.0 - No usar descuento adicional, ya se aplican los descuentos de la cancha
+            metodo_pago: formData.metodo_pago
+          };
            
            
           

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.schemas.reserva import ReservaCreate, ReservaOut, ReservaInternal, MetodoPagoEnum, ReservaCombinadaOut
-from app.crud.reserva import crear_reserva, listar_reservas_usuario, cancelar_reserva, listar_reservas_por_cancha_fecha, reactivar_reserva
+from app.crud.reserva import crear_reserva, listar_reservas_usuario, cancelar_reserva, listar_reservas_por_cancha_fecha, reactivar_reserva, listar_reservas_desde_fecha, buscar_reservas_por_usuario
 from app.services.suscripcion_service import obtener_suscripciones_activas_por_fecha
 from app.data.database import get_db
 from app.services.auth_service import get_current_user

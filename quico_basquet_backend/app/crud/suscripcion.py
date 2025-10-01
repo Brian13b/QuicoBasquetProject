@@ -4,13 +4,15 @@ from app.schemas.suscripcion import SuscripcionCreate, SuscripcionUpdate
 from app.services.reserva_service import hay_solapamiento_suscripcion, validar_horario_reserva, hay_solapamiento_reserva_suscripcion, verificar_solapamiento_suscripcion_multiple_dias
 from app.services.optimized_reserva_service import verificar_solapamiento_suscripcion_optimizado
 from app.services.precio_service import calcular_precio_suscripcion_mensual
+from app.services.descuento_service import aplicar_descuento_multiple_dias, contar_dias_unicos_usuario, calcular_descuento_por_dias
 from app.config.settings import DURACION_MINIMA_RESERVA, DURACION_MAXIMA_RESERVA
 from datetime import datetime, time
 from typing import List, Optional
 
 def crear_suscripcion(db: Session, suscripcion_in: SuscripcionCreate, user_id: int) -> Suscripcion:
-    """Crear una nueva suscripción"""
-
+    """
+    Crear una nueva suscripción
+    """
     
     # Validar horario
     print(f"⏰ Validando horario: {suscripcion_in.hora_inicio} - {suscripcion_in.hora_fin}")
@@ -56,7 +58,15 @@ def crear_suscripcion(db: Session, suscripcion_in: SuscripcionCreate, user_id: i
     db.commit()
     db.refresh(db_suscripcion)
     
+    # 🚀 APLICAR DESCUENTOS AUTOMÁTICOS POR DÍAS MÚLTIPLES
+    print("🔢 Aplicando descuentos automáticos por días múltiples...")
+    aplicar_descuento_multiple_dias(db, user_id, suscripcion_in.dia_semana)
+    
+    # Refresh para obtener el descuento actualizado
+    db.refresh(db_suscripcion)
+    
     print(f"✅ Suscripción creada exitosamente con ID: {db_suscripcion.id}")
+    print(f"💰 Descuento aplicado: {db_suscripcion.descuento}%")
     return db_suscripcion
 
 def listar_suscripciones_usuario(db: Session, user_id: int) -> List[Suscripcion]:
@@ -91,6 +101,11 @@ def cancelar_suscripcion(db: Session, suscripcion_id: int, user_id: int) -> Susc
     suscripcion.estado = "cancelada"
     db.commit()
     db.refresh(suscripcion)
+    
+    # 🚀 RECALCULAR DESCUENTOS AUTOMÁTICOS DESPUÉS DE CANCELAR
+    print("🔢 Recalculando descuentos automáticos tras cancelación...")
+    aplicar_descuento_multiple_dias(db, user_id)
+    
     return suscripcion
 
 def listar_todas_suscripciones(db: Session) -> List[Suscripcion]:

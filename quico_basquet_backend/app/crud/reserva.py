@@ -79,6 +79,37 @@ def listar_todas_reservas(db: Session) -> List[Reserva]:
     """Listar todas las reservas (para administradores)"""
     return db.query(Reserva).order_by(Reserva.fecha.desc(), Reserva.hora_inicio.desc()).all()
 
+def listar_reservas_desde_fecha(db: Session, fecha_desde: str) -> List[Reserva]:
+    """Listar todas las reservas desde una fecha específica en adelante"""
+    try:
+        fecha_obj = datetime.strptime(fecha_desde, "%Y-%m-%d").date()
+    except ValueError:
+        return []
+    
+    return db.query(Reserva).filter(
+        Reserva.fecha >= fecha_obj
+    ).order_by(Reserva.fecha.asc(), Reserva.hora_inicio.asc()).all()
+
+def buscar_reservas_por_usuario(db: Session, termino_busqueda: str) -> List[Reserva]:
+    """Buscar reservas por nombre del usuario, email o nombre del cliente"""
+    from app.models.user import User
+    
+    # Buscar usuarios que coincidan con el término
+    usuarios_encontrados = db.query(User).filter(
+        (User.nombre.ilike(f"%{termino_busqueda}%")) |
+        (User.email.ilike(f"%{termino_busqueda}%"))
+    ).all()
+    
+    user_ids = [usuario.id for usuario in usuarios_encontrados]
+    
+    # Buscar reservas por user_ids o nombre_cliente
+    query = db.query(Reserva).filter(
+        (Reserva.user_id.in_(user_ids)) |
+        (Reserva.nombre_cliente.ilike(f"%{termino_busqueda}%"))
+    )
+    
+    return query.order_by(Reserva.fecha.desc(), Reserva.hora_inicio.desc()).all()
+
 def cancelar_reserva(db: Session, reserva_id: int, user_id: int) -> Optional[Reserva]:
     """Cancelar una reserva"""
     reserva = db.query(Reserva).filter(Reserva.id == reserva_id, Reserva.user_id == user_id).first()
